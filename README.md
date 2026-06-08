@@ -71,3 +71,29 @@ The project will be built step by step:
 6. Fees, latency, inventory limits, and execution approximations
 7. A self-contained HTML report for sharing results
 ```
+
+## Run The Current Backtest
+
+The repository includes a small saved BTCUSDT Binance Futures depth sample:
+
+```text
+data/raw/btcusdt_futures_depth_live.jsonl
+```
+
+Run the example backtest with:
+
+```bash
+python examples/run_real_data_backtest.py
+```
+
+This uses the current simple touch-fill approximation, fee accounting, and
+summary metrics. It is still a research toy, not a production trading simulator.
+
+To refresh the saved Binance sample with live public BTCUSDT Futures depth data:
+
+```bash
+python examples/capture_live_binance_depth.py
+```
+
+This overwrites `data/raw/btcusdt_futures_depth_live.jsonl` with 10 top-of-book
+depth snapshots captured one second apart.
