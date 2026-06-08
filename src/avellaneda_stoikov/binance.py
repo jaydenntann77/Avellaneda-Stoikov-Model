@@ -87,9 +87,10 @@ def reconstruct_snapshots_from_binance_messages(
 ) -> tuple[OrderBookSnapshot, ...]:
     """Reconstruct snapshots from one full depth message and later updates.
 
-    The first message is treated as the initial full book. Each later message is
-    applied as a Binance depth update, and one OrderBookSnapshot is emitted
-    after every message.
+    The first message is treated as the initial full book. Later full snapshot
+    messages replace the local book, while stream-style update messages are
+    applied as depth updates. One OrderBookSnapshot is emitted after every
+    message.
     """
 
     if not messages:
@@ -99,7 +100,10 @@ def reconstruct_snapshots_from_binance_messages(
     snapshots = [book.to_snapshot()]
 
     for message in messages[1:]:
-        book = book.apply_depth_update(message)
+        if _is_full_depth_message(message):
+            book = BinanceOrderBook.from_depth_message(message)
+        else:
+            book = book.apply_depth_update(message)
         snapshots.append(book.to_snapshot())
 
     return tuple(snapshots)
@@ -213,6 +217,10 @@ def _get_levels(
 
 def _has_bid_or_ask_levels(message: Mapping[str, Any]) -> bool:
     return any(key in message for key in ("bids", "b", "asks", "a"))
+
+
+def _is_full_depth_message(message: Mapping[str, Any]) -> bool:
+    return "bids" in message and "asks" in message
 
 
 def _parse_price_quantity_levels(

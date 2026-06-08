@@ -9,7 +9,7 @@ def main() -> None:
         path=output_path,
         symbol="BTCUSDT",
         limit=20,
-        snapshot_count=10,
+        snapshot_count=60,
         interval_seconds=1.0,
     )
     print(f"saved {output_path}")

@@ -7,138 +7,506 @@
     <style>
       :root {
         color-scheme: light;
-        --bg: #f7f8fa;
-        --ink: #19212a;
-        --muted: #667085;
-        --line: #d6dae1;
-        --panel: #ffffff;
-        --accent: #0f766e;
-        --danger: #b42318;
+        --canvas: #f8f3ea;
+        --panel: rgba(255, 252, 246, 0.88);
+        --panel-strong: #fffaf1;
+        --line: #ead9bd;
+        --line-soft: #efe4d2;
+        --ink: #282420;
+        --text: #4f4a44;
+        --muted: #7d7368;
+        --gold: #c78018;
+        --gold-dark: #9b641c;
+        --teal: #075f58;
+        --red: #b1120d;
+        --shadow: 0 18px 44px rgba(117, 84, 42, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
       }
 
       body {
         margin: 0;
-        background: var(--bg);
+        min-height: 100vh;
+        background:
+          radial-gradient(circle at top left, rgba(209, 160, 84, 0.18), transparent 30%),
+          linear-gradient(135deg, #fbf7ef 0%, #f6efe2 46%, #fbf8f1 100%);
         color: var(--ink);
-        font-family: Arial, Helvetica, sans-serif;
+        font-family: "Inter", "Segoe UI", Arial, sans-serif;
+      }
+
+      .shell {
+        min-height: 100vh;
       }
 
       main {
-        max-width: 1120px;
+        width: min(1480px, calc(100% - 48px));
         margin: 0 auto;
-        padding: 32px 20px 48px;
+        padding: 46px 0 36px;
       }
 
       header {
-        margin-bottom: 28px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 40px;
       }
 
       h1 {
-        margin: 0 0 8px;
-        font-size: 32px;
-        line-height: 1.15;
+        margin: 0 0 14px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(36px, 4vw, 54px);
+        font-weight: 500;
+        letter-spacing: 0;
+        line-height: 1.02;
       }
 
       p {
         margin: 0;
         color: var(--muted);
-        line-height: 1.5;
+        line-height: 1.55;
+      }
+
+      .run-badge {
+        flex: 0 0 auto;
+        border-radius: 10px;
+        background: rgba(238, 226, 210, 0.72);
+        color: #80572a;
+        padding: 12px 16px;
+        font-size: 14px;
+        font-weight: 700;
+        white-space: nowrap;
       }
 
       .metrics {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 12px;
-        margin: 24px 0;
+        grid-template-columns: repeat(5, minmax(170px, 1fr));
+        gap: 22px;
+        margin-bottom: 22px;
+      }
+
+      .metric {
+        min-height: 132px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: var(--panel);
+        box-shadow: var(--shadow);
+        padding: 26px 22px;
+        display: grid;
+        grid-template-columns: 54px 1fr;
+        gap: 18px;
+        align-items: center;
+      }
+
+      .metric.wide {
+        max-width: 300px;
+        margin-bottom: 22px;
+      }
+
+      .metric-icon {
+        width: 54px;
+        height: 54px;
+        border: 1px solid var(--line-soft);
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: #fff8ef;
+        color: var(--gold-dark);
+        font-size: 23px;
+      }
+
+      .metric-icon.teal {
+        background: #e9f4f1;
+        color: var(--teal);
+      }
+
+      .label {
+        color: var(--text);
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      .value {
+        margin-top: 9px;
+        color: var(--ink);
+        font-size: 24px;
+        font-weight: 800;
+      }
+
+      .unit {
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .negative {
+        color: var(--red);
+      }
+
+      .positive {
+        color: var(--teal);
       }
 
       .charts {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 22px;
+        margin-bottom: 24px;
+      }
+
+      .replay {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: var(--panel);
+        box-shadow: var(--shadow);
+        padding: 22px 24px;
+        margin-bottom: 24px;
+      }
+
+      .replay-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 16px;
+      }
+
+      .replay-title {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 26px;
+        font-weight: 600;
+      }
+
+      .replay-subtitle {
+        margin-top: 5px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .replay-stats {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(150px, 1fr));
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .replay-stat {
+        border: 1px solid var(--line-soft);
+        border-radius: 10px;
+        background: rgba(255, 252, 246, 0.78);
+        padding: 13px 14px;
+      }
+
+      .replay-stat .label {
+        color: var(--muted);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 11px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .replay-stat .value {
+        margin-top: 7px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 20px;
+      }
+
+      .replay-controls {
+        display: grid;
+        grid-template-columns: auto minmax(180px, 1fr) auto;
         gap: 14px;
-        margin: 0 0 24px;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      button {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: var(--panel-strong);
+        color: var(--ink);
+        cursor: pointer;
+        font: inherit;
+        padding: 9px 18px;
+      }
+
+      input[type="range"] {
+        width: 100%;
+        accent-color: var(--teal);
+      }
+
+      .frame-label {
+        color: var(--muted);
+        font-size: 13px;
+        white-space: nowrap;
+      }
+
+      .replay-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
+        gap: 18px;
+      }
+
+      .replay-panel {
+        min-height: 300px;
+        border: 1px solid var(--line-soft);
+        border-radius: 12px;
+        background: rgba(255, 252, 246, 0.76);
+        padding: 16px;
+      }
+
+      .replay-panel h3 {
+        margin: 0 0 12px;
+        font-size: 15px;
+      }
+
+      .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        color: var(--muted);
+        font-size: 12px;
+        margin-bottom: 10px;
+      }
+
+      .legend span {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .legend-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+
+      .state-card {
+        position: absolute;
+        top: 72px;
+        right: 28px;
+        width: min(245px, 42%);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: var(--panel-strong);
+        padding: 13px;
+        font-size: 12px;
+        box-shadow: 0 16px 34px rgba(117, 84, 42, 0.1);
+        z-index: 2;
+      }
+
+      .state-card div {
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+        margin: 6px 0;
+      }
+
+      .fills-line {
+        margin-top: 10px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .quote-panel {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .replay-chart {
+        width: 100%;
+        height: 285px;
+      }
+
+      .chart-mid-line {
+        fill: none;
+        stroke: #2f5ed8;
+        stroke-width: 2;
+      }
+
+      .chart-bid-line {
+        fill: none;
+        stroke: rgba(7, 95, 88, 0.82);
+        stroke-width: 2;
+      }
+
+      .chart-ask-line {
+        fill: none;
+        stroke: rgba(158, 78, 105, 0.82);
+        stroke-width: 2;
+      }
+
+      .cursor-line {
+        stroke: rgba(40, 36, 32, 0.45);
+        stroke-width: 1.5;
+        stroke-dasharray: 4 4;
+      }
+
+      .fill-buy {
+        fill: #0c8b4d;
+        stroke: #fffaf1;
+        stroke-width: 1.2;
+      }
+
+      .fill-sell {
+        fill: #d31313;
+        stroke: #fffaf1;
+        stroke-width: 1.2;
+      }
+
+      .book-ladder {
+        display: grid;
+        gap: 7px;
+        max-width: 430px;
+        margin: 8px auto 0;
+      }
+
+      .book-header,
+      .book-row {
+        display: grid;
+        grid-template-columns: 56px minmax(54px, 1fr) 70px 70px minmax(54px, 1fr) 56px;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .book-header {
+        color: var(--muted);
+        font-size: 12px;
+        margin-bottom: 5px;
+      }
+
+      .book-row {
+        font-size: 11px;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .book-bar {
+        height: 14px;
+        border-radius: 999px;
+        transition: width 220ms ease, opacity 220ms ease;
+      }
+
+      .book-bid-qty,
+      .book-bid-price {
+        color: #075f58;
+        text-align: right;
+      }
+
+      .book-ask-price,
+      .book-ask-qty {
+        color: #9f413d;
+      }
+
+      .bid-bar {
+        background: rgba(7, 95, 88, 0.72);
+        justify-self: end;
+      }
+
+      .ask-bar {
+        background: rgba(231, 140, 130, 0.78);
+        justify-self: start;
+      }
+
+      .book-midline {
+        position: relative;
+      }
+
+      .book-midline::after {
+        content: "";
+        position: absolute;
+        top: -3px;
+        bottom: -3px;
+        right: -4px;
+        width: 1px;
+        background: var(--line-soft);
+      }
+
+      .book-spread {
+        margin-top: 14px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 11px;
       }
 
       .chart {
-        background: var(--panel);
+        min-height: 340px;
         border: 1px solid var(--line);
-        border-radius: 8px;
-        padding: 14px;
+        border-radius: 14px;
+        background: var(--panel);
+        box-shadow: var(--shadow);
+        padding: 22px 24px;
       }
 
-      .chart h2 {
-        margin: 0 0 10px;
-        font-size: 16px;
+      .chart-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+        font-size: 18px;
+        font-weight: 800;
+      }
+
+      .section-icon {
+        color: var(--gold);
+        width: 22px;
+        text-align: center;
+        font-size: 22px;
       }
 
       svg {
         display: block;
         width: 100%;
-        height: 220px;
+        height: 250px;
       }
 
       .axis {
-        stroke: var(--line);
+        stroke: var(--line-soft);
+        stroke-width: 1;
+      }
+
+      .grid-line {
+        stroke: var(--line-soft);
+        stroke-dasharray: 3 4;
         stroke-width: 1;
       }
 
       .equity-line {
         fill: none;
-        stroke: var(--danger);
+        stroke: #d47b00;
         stroke-width: 3;
       }
 
       .inventory-line {
         fill: none;
-        stroke: var(--accent);
+        stroke: var(--teal);
         stroke-width: 3;
       }
 
       .point {
-        fill: var(--panel);
-        stroke-width: 2;
+        fill: var(--panel-strong);
+        stroke-width: 2.5;
       }
 
-      .metric {
-        background: var(--panel);
+      .table-wrap {
         border: 1px solid var(--line);
-        border-radius: 8px;
-        padding: 14px;
-      }
-
-      .label {
-        color: var(--muted);
-        font-size: 12px;
-        text-transform: uppercase;
-      }
-
-      .value {
-        margin-top: 8px;
-        font-size: 22px;
-        font-weight: 700;
-      }
-
-      .negative {
-        color: var(--danger);
-      }
-
-      .positive {
-        color: var(--accent);
+        border-radius: 14px;
+        background: var(--panel);
+        box-shadow: var(--shadow);
+        overflow: hidden;
       }
 
       table {
         width: 100%;
         border-collapse: collapse;
-        background: var(--panel);
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        overflow: hidden;
       }
 
       th,
       td {
         border-bottom: 1px solid var(--line);
-        padding: 10px 12px;
+        padding: 14px 18px;
         text-align: right;
         font-size: 14px;
       }
@@ -149,8 +517,10 @@
       }
 
       th {
-        color: var(--muted);
+        background: rgba(248, 239, 225, 0.72);
+        color: var(--text);
         font-size: 12px;
+        font-weight: 800;
         text-transform: uppercase;
       }
 
@@ -159,90 +529,235 @@
       }
 
       .note {
-        margin-top: 14px;
-        font-size: 13px;
+        margin-top: 28px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: rgba(255, 252, 246, 0.7);
+        padding: 16px 20px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 1180px) {
+        .metrics {
+          grid-template-columns: repeat(2, minmax(170px, 1fr));
+        }
+
+        .charts {
+          grid-template-columns: 1fr;
+        }
+
+        .replay-grid,
+        .replay-stats {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 700px) {
+        main {
+          width: min(100% - 28px, 1480px);
+          padding: 28px 0;
+        }
+
+        header {
+          display: grid;
+        }
+
+        .metrics {
+          grid-template-columns: 1fr;
+        }
+
+        .table-wrap {
+          overflow-x: auto;
+        }
+
+        .state-card {
+          position: static;
+          width: 100%;
+          margin-bottom: 12px;
+        }
       }
     </style>
   </head>
   <body>
-    <main>
-      <header>
-        <h1>Avellaneda-Stoikov Backtest Report</h1>
-        <p>
-          Real Binance BTCUSDT Futures depth sample, replayed through a simple
-          inventory-aware market making backtest.
-        </p>
-      </header>
+    <div class="shell">
+      <main>
+        <header>
+          <div>
+            <h1>Avellaneda-Stoikov Backtest Report</h1>
+            <p>
+              Real Binance BTCUSDT Futures depth sample, replayed through a
+              simple inventory-aware market making backtest.
+            </p>
+          </div>
+          <div class="run-badge" id="run-badge">Backtest Run</div>
+        </header>
 
-      <section class="metrics" id="metrics"></section>
+        <section class="metrics" id="metrics"></section>
+        <section id="drawdown-metric"></section>
 
-      <section class="charts">
-        <article class="chart">
-          <h2>Equity Curve</h2>
-          <svg id="equity-chart" viewBox="0 0 640 220" role="img" aria-label="Equity curve"></svg>
-        </article>
-        <article class="chart">
-          <h2>Inventory Path</h2>
-          <svg id="inventory-chart" viewBox="0 0 640 220" role="img" aria-label="Inventory path"></svg>
-        </article>
-      </section>
+        <section class="charts">
+          <article class="chart">
+            <div class="chart-title"><span class="section-icon">⌁</span>Equity Curve</div>
+            <svg id="equity-chart" viewBox="0 0 640 250" role="img" aria-label="Equity curve"></svg>
+          </article>
+          <article class="chart">
+            <div class="chart-title"><span class="section-icon">▥</span>Inventory Path</div>
+            <svg id="inventory-chart" viewBox="0 0 640 250" role="img" aria-label="Inventory path"></svg>
+          </article>
+        </section>
 
-      <section>
-        <table>
-          <thead>
-            <tr>
-              <th>Step</th>
-              <th>Bid</th>
-              <th>Ask</th>
-              <th>Fills</th>
-              <th>Inventory</th>
-              <th>Fees</th>
-              <th>Equity</th>
-            </tr>
-          </thead>
-          <tbody id="rows"></tbody>
-        </table>
-        <p class="note">
-          Fill model: touch approximation. This is a research backtest, not a
-          production trading simulator.
-        </p>
-      </section>
-    </main>
+        <section class="replay">
+          <div class="replay-header">
+            <div>
+              <h2 class="replay-title">Continuous A-S Animated Replay</h2>
+              <div class="replay-subtitle" id="replay-subtitle">BTCUSDT depth replay</div>
+            </div>
+            <div class="frame-label" id="replay-clock">frame 0 / 0</div>
+          </div>
+          <div class="replay-stats" id="replay-stats"></div>
+          <div class="replay-controls">
+            <button id="play-button" type="button">Play</button>
+            <input id="frame-slider" type="range" min="0" max="0" value="0" />
+            <div class="frame-label" id="frame-label">frame 0 / 0</div>
+          </div>
+          <div class="replay-grid">
+            <article class="replay-panel quote-panel">
+              <h3>Order Book Quotes And Fills</h3>
+              <div class="legend">
+                <span style="color: #2f5ed8"><i class="legend-dot"></i>Mid</span>
+                <span style="color: var(--teal)"><i class="legend-dot"></i>Bid Active</span>
+                <span style="color: #9e4e69"><i class="legend-dot"></i>Ask Active</span>
+                <span style="color: #0c8b4d"><i class="legend-dot"></i>Buy Fill</span>
+                <span style="color: #d31313"><i class="legend-dot"></i>Sell Fill</span>
+              </div>
+              <div class="state-card" id="state-card"></div>
+              <svg id="quote-replay-chart" class="replay-chart" viewBox="0 0 720 285" role="img" aria-label="Animated order book quotes and fills"></svg>
+              <div class="fills-line" id="fills-line"></div>
+            </article>
+            <article class="replay-panel">
+              <h3>Current Order Book</h3>
+              <div class="book-ladder" id="book-ladder"></div>
+              <div class="book-spread" id="book-spread"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Step</th>
+                <th>Mid</th>
+                <th>Mkt Spread</th>
+                <th>Bid</th>
+                <th>Ask</th>
+                <th>Fills</th>
+                <th>Inventory</th>
+                <th>Fees</th>
+                <th>Equity</th>
+              </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </section>
+
+        <p class="note" id="report-note"></p>
+      </main>
+    </div>
 
     <script>
       async function loadReport() {
         const response = await fetch("./latest_backtest.json");
         const report = await response.json();
-        renderMetrics(report.summary);
-        renderChart("equity-chart", report.rows, "equity", "equity-line", "var(--danger)");
-        renderChart("inventory-chart", report.rows, "inventory", "inventory-line", "var(--accent)");
+        renderRunBadge(report.metadata);
+        renderNote(report.metadata);
+        renderMetrics(report.summary, report.metadata);
+        renderChart("equity-chart", report.rows, "equity", "equity-line", "#d47b00");
+        renderChart("inventory-chart", report.rows, "inventory", "inventory-line", "var(--teal)");
         renderRows(report.rows);
+        renderReplayStats(report.summary, report.metadata);
+        setupReplay(report.rows);
       }
 
       function formatNumber(value, digits = 6) {
         return Number(value).toFixed(digits);
       }
 
-      function renderMetrics(summary) {
-        const metrics = [
-          ["Final equity", formatNumber(summary.final_equity, 8), summary.final_equity],
-          ["Total fills", summary.total_fills, summary.total_fills],
-          ["Buy / sell", `${summary.buy_fills} / ${summary.sell_fills}`, 0],
-          ["Traded notional", formatNumber(summary.traded_notional, 4), summary.traded_notional],
-          ["Total fees", formatNumber(summary.total_fees, 8), -summary.total_fees],
-          ["Max drawdown", formatNumber(summary.max_drawdown, 8), -summary.max_drawdown],
-        ];
-        document.getElementById("metrics").innerHTML = metrics
-          .map(([label, value, signedValue]) => {
-            const tone = signedValue < 0 ? "negative" : signedValue > 0 ? "positive" : "";
-            return `
-              <article class="metric">
-                <div class="label">${label}</div>
-                <div class="value ${tone}">${value}</div>
-              </article>
-            `;
-          })
-          .join("");
+      function renderRunBadge(metadata) {
+        const now = new Date();
+        document.getElementById("run-badge").textContent =
+          `Backtest Run: ${now.toLocaleString("en-US", {
+            month: "short",
+            day: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          })}`;
+      }
+
+      function renderNote(metadata) {
+        const fillModel = metadata.execution?.fill_model || "unknown";
+        document.getElementById("report-note").textContent =
+          `Fill model: ${fillModel}. This is a research backtest, not a production trading simulator.`;
+      }
+
+      function metricCard(label, value, unit, signedValue, icon, iconTone = "") {
+        const tone = signedValue < 0 ? "negative" : signedValue > 0 ? "positive" : "";
+        return `
+          <article class="metric">
+            <div class="metric-icon ${iconTone}">${icon}</div>
+            <div>
+              <div class="label">${label}</div>
+              <div class="value ${tone}">${value}</div>
+              <div class="unit">${unit}</div>
+            </div>
+          </article>
+        `;
+      }
+
+      function renderMetrics(summary, metadata) {
+        document.getElementById("metrics").innerHTML = [
+          metricCard("Final Equity", formatNumber(summary.final_equity, 8), "USDT", summary.final_equity, "▣"),
+          metricCard("Net PNL", formatNumber(summary.net_pnl ?? summary.final_equity, 8), "USDT", summary.net_pnl ?? summary.final_equity, "⌁"),
+          metricCard("Total Fills", summary.total_fills, "fills", summary.total_fills, "▥"),
+          metricCard("Buy / Sell", `${summary.buy_fills} / ${summary.sell_fills}`, "ratio", 0, "↔"),
+          metricCard("Traded Notional", formatNumber(summary.traded_notional, 4), "USDT", summary.traded_notional, "$", "teal"),
+          metricCard("Total Fees", formatNumber(summary.total_fees, 8), "USDT", -summary.total_fees, "◇"),
+        ].join("");
+        document.getElementById("drawdown-metric").innerHTML =
+          `<article class="metric wide">
+            <div class="metric-icon">⌁</div>
+            <div>
+              <div class="label">Max Drawdown</div>
+              <div class="value negative">${formatNumber(summary.max_drawdown, 8)}</div>
+              <div class="unit">USDT</div>
+            </div>
+          </article>`;
+      }
+
+      function renderReplayStats(summary, metadata) {
+        const params = metadata.model_parameters || {};
+        const execution = metadata.execution || {};
+        const netPnl = summary.net_pnl ?? summary.final_equity - (execution.initial_cash || 0);
+        document.getElementById("replay-subtitle").textContent =
+          `${metadata.symbol || "BTCUSDT"} | events=${metadata.steps || 0} | fill_model=${execution.fill_model || "unknown"}`;
+        document.getElementById("replay-stats").innerHTML = [
+          replayStat("Final Equity", `${formatNumber(summary.final_equity, 4)} USDT`, summary.final_equity),
+          replayStat("Net PNL", `${formatNumber(netPnl, 6)} USDT`, netPnl),
+          replayStat("Fills", String(summary.total_fills), summary.total_fills),
+          replayStat("Gamma / K", `${formatNumber(params.gamma || 0, 4)} / ${formatNumber(params.k || 0, 4)}`, 0),
+        ].join("");
+      }
+
+      function replayStat(label, value, signedValue) {
+        const tone = signedValue < 0 ? "negative" : signedValue > 0 ? "positive" : "";
+        return `
+          <article class="replay-stat">
+            <div class="label">${label}</div>
+            <div class="value ${tone}">${value}</div>
+          </article>
+        `;
       }
 
       function renderRows(rows) {
@@ -252,6 +767,8 @@
             return `
               <tr>
                 <td>${row.step}</td>
+                <td>${formatNumber(row.mid_price, 4)}</td>
+                <td>${formatNumber(row.market_spread, 4)}</td>
                 <td>${formatNumber(row.bid, 4)}</td>
                 <td>${formatNumber(row.ask, 4)}</td>
                 <td>${row.fills}</td>
@@ -267,8 +784,8 @@
       function renderChart(id, rows, field, lineClass, pointColor) {
         const svg = document.getElementById(id);
         const width = 640;
-        const height = 220;
-        const padding = 28;
+        const height = 250;
+        const padding = 36;
         const values = rows.map((row) => Number(row[field]));
         const min = Math.min(...values);
         const max = Math.max(...values);
@@ -281,11 +798,19 @@
           return { x, y, value };
         });
         const polyline = points.map((point) => `${point.x},${point.y}`).join(" ");
-        const zeroY = min <= 0 && max >= 0
-          ? height - padding - ((0 - min) / range) * (height - padding * 2)
-          : height - padding;
+        const zeroY =
+          min <= 0 && max >= 0
+            ? height - padding - ((0 - min) / range) * (height - padding * 2)
+            : height - padding;
+        const gridLines = [0, 0.25, 0.5, 0.75, 1]
+          .map((ratio) => {
+            const y = padding + ratio * (height - padding * 2);
+            return `<line class="grid-line" x1="${padding}" y1="${y}" x2="${width - padding}" y2="${y}"></line>`;
+          })
+          .join("");
 
         svg.innerHTML = `
+          ${gridLines}
           <line class="axis" x1="${padding}" y1="${height - padding}" x2="${width - padding}" y2="${height - padding}"></line>
           <line class="axis" x1="${padding}" y1="${padding}" x2="${padding}" y2="${height - padding}"></line>
           <line class="axis" x1="${padding}" y1="${zeroY}" x2="${width - padding}" y2="${zeroY}"></line>
@@ -293,13 +818,181 @@
           ${points
             .map(
               (point) => `
-                <circle class="point" cx="${point.x}" cy="${point.y}" r="4" style="stroke: ${pointColor}">
+                <circle class="point" cx="${point.x}" cy="${point.y}" r="3.5" style="stroke: ${pointColor}">
                   <title>${field}: ${formatNumber(point.value, 8)}</title>
                 </circle>
               `
             )
             .join("")}
         `;
+      }
+
+      let replayTimer = null;
+      let replayRows = [];
+      let currentFrame = 0;
+
+      function setupReplay(rows) {
+        replayRows = rows;
+        const slider = document.getElementById("frame-slider");
+        const button = document.getElementById("play-button");
+        slider.max = String(Math.max(rows.length - 1, 0));
+        slider.value = "0";
+        slider.addEventListener("input", () => {
+          stopReplay();
+          renderReplayFrame(Number(slider.value));
+        });
+        button.addEventListener("click", () => {
+          if (replayTimer) {
+            stopReplay();
+          } else {
+            button.textContent = "Pause";
+            replayTimer = window.setInterval(() => {
+              const nextFrame = currentFrame + 1 >= replayRows.length ? 0 : currentFrame + 1;
+              renderReplayFrame(nextFrame);
+            }, 450);
+          }
+        });
+        renderReplayFrame(0);
+      }
+
+      function stopReplay() {
+        if (replayTimer) {
+          window.clearInterval(replayTimer);
+          replayTimer = null;
+        }
+        document.getElementById("play-button").textContent = "Play";
+      }
+
+      function renderReplayFrame(index) {
+        currentFrame = index;
+        const row = replayRows[index];
+        if (!row) return;
+        document.getElementById("frame-slider").value = String(index);
+        document.getElementById("frame-label").textContent = `frame ${index + 1} / ${replayRows.length}`;
+        document.getElementById("replay-clock").textContent =
+          `frame ${index + 1} / ${replayRows.length} | step ${row.step}`;
+        renderStateCard(row);
+        renderQuoteReplayChart(index);
+        renderOrderBook(row);
+      }
+
+      function renderStateCard(row) {
+        document.getElementById("state-card").innerHTML = `
+          <div><span>Cash</span><strong>${formatNumber(row.cash, 4)} USDT</strong></div>
+          <div><span>Position</span><strong>${formatNumber(row.inventory, 6)} BTC</strong></div>
+          <div><span>Equity</span><strong>${formatNumber(row.equity, 6)} USDT</strong></div>
+          <div><span>Mid</span><strong>${formatNumber(row.mid_price, 2)}</strong></div>
+        `;
+      }
+
+      function renderQuoteReplayChart(index) {
+        const svg = document.getElementById("quote-replay-chart");
+        const width = 720;
+        const height = 285;
+        const padding = { top: 16, right: 24, bottom: 30, left: 42 };
+        const visibleRows = replayRows.slice(0, index + 1);
+        const fields = ["mid_price", "bid", "ask"];
+        const values = replayRows.flatMap((row) => fields.map((field) => Number(row[field])));
+        const min = Math.min(...values);
+        const max = Math.max(...values);
+        const pad = Math.max((max - min) * 0.12, 0.05);
+        const yMin = min - pad;
+        const yMax = max + pad;
+        const yRange = yMax - yMin || 1;
+        const xStep =
+          replayRows.length > 1
+            ? (width - padding.left - padding.right) / (replayRows.length - 1)
+            : 0;
+
+        const xFor = (rowIndex) => padding.left + xStep * rowIndex;
+        const yFor = (value) =>
+          height - padding.bottom - ((Number(value) - yMin) / yRange) * (height - padding.top - padding.bottom);
+        const pathFor = (field) =>
+          visibleRows
+            .map((row, rowIndex) => `${rowIndex === 0 ? "M" : "L"} ${xFor(rowIndex).toFixed(2)} ${yFor(row[field]).toFixed(2)}`)
+            .join(" ");
+
+        const grid = [0, 0.25, 0.5, 0.75, 1]
+          .map((ratio) => {
+            const y = padding.top + ratio * (height - padding.top - padding.bottom);
+            return `<line class="grid-line" x1="${padding.left}" y1="${y}" x2="${width - padding.right}" y2="${y}"></line>`;
+          })
+          .join("");
+        const cursorX = xFor(index);
+        const fillMarkers = visibleRows
+          .flatMap((row, rowIndex) =>
+            (row.fill_details || []).map((fill) => {
+              const className = fill.side === "buy" ? "fill-buy" : "fill-sell";
+              const x = xFor(rowIndex);
+              const y = yFor(fill.price);
+              if (fill.side === "buy") {
+                return `<polygon class="${className}" points="${x},${y - 7} ${x - 6},${y + 5} ${x + 6},${y + 5}"></polygon>`;
+              }
+              return `<polygon class="${className}" points="${x},${y + 7} ${x - 6},${y - 5} ${x + 6},${y - 5}"></polygon>`;
+            })
+          )
+          .join("");
+        const row = replayRows[index];
+        const fills = row.fill_details || [];
+
+        svg.innerHTML = `
+          ${grid}
+          <line class="axis" x1="${padding.left}" y1="${height - padding.bottom}" x2="${width - padding.right}" y2="${height - padding.bottom}"></line>
+          <line class="axis" x1="${padding.left}" y1="${padding.top}" x2="${padding.left}" y2="${height - padding.bottom}"></line>
+          <path class="chart-mid-line" d="${pathFor("mid_price")}"></path>
+          <path class="chart-bid-line" d="${pathFor("bid")}"></path>
+          <path class="chart-ask-line" d="${pathFor("ask")}"></path>
+          ${fillMarkers}
+          <line class="cursor-line" x1="${cursorX}" y1="${padding.top}" x2="${cursorX}" y2="${height - padding.bottom}"></line>
+          <circle class="point" cx="${cursorX}" cy="${yFor(row.mid_price)}" r="4" style="stroke: #2f5ed8"></circle>
+          <text x="${padding.left}" y="${height - 8}" fill="var(--muted)" font-size="11">step 1</text>
+          <text x="${width - padding.right - 44}" y="${height - 8}" fill="var(--muted)" font-size="11">step ${replayRows.length}</text>
+        `;
+
+        document.getElementById("fills-line").textContent = fills.length
+          ? fills.map((fill) => `${fill.side} ${fill.quantity} @ ${formatNumber(fill.price, 2)}`).join(" | ")
+          : "current frame has no fill";
+      }
+
+      function renderOrderBook(row) {
+        const bids = row.book_bids || [];
+        const asks = row.book_asks || [];
+        const depth = Math.max(bids.length, asks.length);
+        const maxQty = Math.max(
+          ...bids.map((level) => Number(level.quantity)),
+          ...asks.map((level) => Number(level.quantity)),
+          1
+        );
+        const rows = Array.from({ length: depth }, (_, index) => {
+          const bid = bids[index];
+          const ask = asks[index];
+          const bidWidth = bid ? Math.max((Number(bid.quantity) / maxQty) * 100, 3) : 0;
+          const askWidth = ask ? Math.max((Number(ask.quantity) / maxQty) * 100, 3) : 0;
+          return `
+            <div class="book-row">
+              <span class="book-bid-qty">${bid ? formatNumber(bid.quantity, 3) : ""}</span>
+              <div class="book-bar bid-bar" style="width: ${bidWidth}%"></div>
+              <span class="book-bid-price book-midline">${bid ? formatNumber(bid.price, 1) : ""}</span>
+              <span class="book-ask-price">${ask ? formatNumber(ask.price, 1) : ""}</span>
+              <div class="book-bar ask-bar" style="width: ${askWidth}%"></div>
+              <span class="book-ask-qty">${ask ? formatNumber(ask.quantity, 3) : ""}</span>
+            </div>
+          `;
+        }).join("");
+
+        document.getElementById("book-ladder").innerHTML = `
+          <div class="book-header">
+            <span>Qty</span>
+            <span></span>
+            <span class="book-bid-price book-midline">Bid</span>
+            <span class="book-ask-price">Ask</span>
+            <span></span>
+            <span>Qty</span>
+          </div>
+          ${rows}
+        `;
+        document.getElementById("book-spread").textContent =
+          `spread ${formatNumber(row.market_spread, 4)} | top ${depth} levels`;
       }
 
       loadReport();

@@ -115,6 +115,26 @@ def test_reconstruct_snapshots_from_binance_messages_replays_updates() -> None:
     assert snapshots[2].best_ask == pytest.approx(102.0)
 
 
+def test_reconstruct_snapshots_from_binance_messages_replaces_full_snapshots() -> None:
+    messages = [
+        {
+            "bids": [["100.0", "1.0"]],
+            "asks": [["101.0", "1.0"]],
+        },
+        {
+            "bids": [["102.0", "1.0"]],
+            "asks": [["103.0", "1.0"]],
+        },
+    ]
+
+    snapshots = reconstruct_snapshots_from_binance_messages(messages)
+
+    assert len(snapshots) == 2
+    assert snapshots[0].best_bid == pytest.approx(100.0)
+    assert snapshots[1].best_bid == pytest.approx(102.0)
+    assert snapshots[1].best_ask == pytest.approx(103.0)
+
+
 def test_reconstruct_snapshots_from_binance_messages_rejects_empty_sequence() -> None:
     with pytest.raises(ValueError, match="at least one Binance depth message is required"):
         reconstruct_snapshots_from_binance_messages([])

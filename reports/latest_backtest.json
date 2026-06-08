@@ -1,59 +1,5281 @@
 {
+  "metadata": {
+    "title": "Avellaneda-Stoikov BTCUSDT Futures Backtest",
+    "symbol": "BTCUSDT",
+    "venue": "Binance USD-M Futures",
+    "data_path": "data/raw/btcusdt_futures_depth_live.jsonl",
+    "steps": 60,
+    "model_parameters": {
+      "gamma": 0.02,
+      "sigma": 3.667019757011298,
+      "horizon": 60.0,
+      "k": 2.0
+    },
+    "execution": {
+      "initial_cash": 100000.0,
+      "fill_model": "next_snapshot",
+      "quote_quantity": 0.05,
+      "fee_rate": 0.0002,
+      "max_absolute_inventory": 1.0
+    },
+    "interpretation": "Sigma is estimated from realized BTCUSDT mid-price changes. The next-snapshot fill model only fills quotes when the next real order book moves through them, so inventory can finish non-zero instead of being forced flat."
+  },
   "summary": {
-    "final_equity": -0.1516633499800071,
-    "final_inventory": 0.0,
-    "total_fills": 6,
-    "buy_fills": 3,
-    "sell_fills": 3,
-    "traded_notional": 379.30830000000003,
-    "total_fees": 0.15172332000000002,
-    "max_absolute_inventory": 0.0,
-    "min_equity": -0.1516633499800071,
-    "max_equity": -0.05055444999333704,
-    "max_drawdown": 0.10110889998667007
+    "final_equity": 100000.52726606852,
+    "final_inventory": -0.05,
+    "total_fills": 3,
+    "buy_fills": 1,
+    "sell_fills": 2,
+    "traded_notional": 9486.266810149167,
+    "total_fees": 1.8972533620298335,
+    "max_absolute_inventory": 0.1,
+    "min_equity": 99999.22070168672,
+    "max_equity": 100000.79070168671,
+    "max_drawdown": 1.1487672798102722,
+    "initial_equity": 100000.0,
+    "net_pnl": 0.5272660685150186
   },
   "rows": [
     {
       "step": 1,
-      "bid": 63218.04000499667,
-      "ask": 63218.059995003336,
-      "reservation_price": 63218.05,
-      "spread": 0.019990006661668464,
-      "fills": 2,
-      "buy_fills": 1,
-      "sell_fills": 1,
-      "cash": -0.05055444999333704,
+      "mid_price": 63223.25,
+      "market_spread": 0.10000000000582077,
+      "bid": 63214.68426311835,
+      "ask": 63231.81573688165,
+      "reservation_price": 63223.25,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 8.565736881646444,
+      "ask_distance_from_mid": 8.565736881646444,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63223.2,
+          "quantity": 3.718
+        },
+        {
+          "price": 63223.1,
+          "quantity": 0.107
+        },
+        {
+          "price": 63223.0,
+          "quantity": 0.002
+        },
+        {
+          "price": 63222.9,
+          "quantity": 0.002
+        },
+        {
+          "price": 63222.6,
+          "quantity": 0.002
+        },
+        {
+          "price": 63222.5,
+          "quantity": 0.302
+        },
+        {
+          "price": 63222.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63221.7,
+          "quantity": 0.001
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63223.3,
+          "quantity": 4.69
+        },
+        {
+          "price": 63223.4,
+          "quantity": 0.003
+        },
+        {
+          "price": 63223.5,
+          "quantity": 0.001
+        },
+        {
+          "price": 63223.8,
+          "quantity": 0.002
+        },
+        {
+          "price": 63223.9,
+          "quantity": 0.059
+        },
+        {
+          "price": 63224.0,
+          "quantity": 0.317
+        },
+        {
+          "price": 63224.1,
+          "quantity": 0.003
+        },
+        {
+          "price": 63224.3,
+          "quantity": 0.001
+        }
+      ],
+      "cash": 100000.0,
       "inventory": 0.0,
-      "fees_paid": 0.050574440000000005,
-      "equity": -0.05055444999333704
+      "fees_paid": 0.0,
+      "equity": 100000.0
     },
     {
       "step": 2,
-      "bid": 63218.04000499667,
-      "ask": 63218.059995003336,
-      "reservation_price": 63218.05,
-      "spread": 0.019990006661668464,
-      "fills": 2,
-      "buy_fills": 1,
-      "sell_fills": 1,
-      "cash": -0.10110889998667207,
+      "mid_price": 63230.649999999994,
+      "market_spread": 0.09999999999854481,
+      "bid": 63222.08426311835,
+      "ask": 63239.21573688164,
+      "reservation_price": 63230.649999999994,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 8.565736881646444,
+      "ask_distance_from_mid": 8.565736881646444,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63230.6,
+          "quantity": 2.006
+        },
+        {
+          "price": 63230.5,
+          "quantity": 0.002
+        },
+        {
+          "price": 63230.3,
+          "quantity": 0.001
+        },
+        {
+          "price": 63230.2,
+          "quantity": 0.002
+        },
+        {
+          "price": 63230.0,
+          "quantity": 0.15
+        },
+        {
+          "price": 63229.8,
+          "quantity": 0.001
+        },
+        {
+          "price": 63229.7,
+          "quantity": 0.002
+        },
+        {
+          "price": 63229.6,
+          "quantity": 0.001
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63230.7,
+          "quantity": 5.756
+        },
+        {
+          "price": 63230.9,
+          "quantity": 0.002
+        },
+        {
+          "price": 63231.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63231.7,
+          "quantity": 0.001
+        },
+        {
+          "price": 63231.9,
+          "quantity": 0.093
+        },
+        {
+          "price": 63232.0,
+          "quantity": 0.317
+        },
+        {
+          "price": 63232.2,
+          "quantity": 0.001
+        },
+        {
+          "price": 63232.4,
+          "quantity": 0.001
+        }
+      ],
+      "cash": 100000.0,
       "inventory": 0.0,
-      "fees_paid": 0.10114888000000001,
-      "equity": -0.10110889998667207
+      "fees_paid": 0.0,
+      "equity": 100000.0
     },
     {
       "step": 3,
-      "bid": 63218.04000499667,
-      "ask": 63218.059995003336,
-      "reservation_price": 63218.05,
-      "spread": 0.019990006661668464,
-      "fills": 2,
-      "buy_fills": 1,
-      "sell_fills": 1,
-      "cash": -0.1516633499800071,
+      "mid_price": 63230.649999999994,
+      "market_spread": 0.09999999999854481,
+      "bid": 63222.08426311835,
+      "ask": 63239.21573688164,
+      "reservation_price": 63230.649999999994,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 8.565736881646444,
+      "ask_distance_from_mid": 8.565736881646444,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63230.6,
+          "quantity": 0.908
+        },
+        {
+          "price": 63230.5,
+          "quantity": 0.001
+        },
+        {
+          "price": 63230.4,
+          "quantity": 0.001
+        },
+        {
+          "price": 63230.3,
+          "quantity": 0.002
+        },
+        {
+          "price": 63230.2,
+          "quantity": 0.002
+        },
+        {
+          "price": 63230.0,
+          "quantity": 0.15
+        },
+        {
+          "price": 63229.8,
+          "quantity": 0.001
+        },
+        {
+          "price": 63229.7,
+          "quantity": 0.002
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63230.7,
+          "quantity": 3.908
+        },
+        {
+          "price": 63230.8,
+          "quantity": 3.596
+        },
+        {
+          "price": 63230.9,
+          "quantity": 0.002
+        },
+        {
+          "price": 63231.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63231.7,
+          "quantity": 0.001
+        },
+        {
+          "price": 63231.9,
+          "quantity": 0.189
+        },
+        {
+          "price": 63232.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63232.1,
+          "quantity": 0.317
+        }
+      ],
+      "cash": 100000.0,
       "inventory": 0.0,
-      "fees_paid": 0.15172332000000002,
-      "equity": -0.1516633499800071
+      "fees_paid": 0.0,
+      "equity": 100000.0
+    },
+    {
+      "step": 4,
+      "mid_price": 63230.649999999994,
+      "market_spread": 0.09999999999854481,
+      "bid": 63222.08426311835,
+      "ask": 63239.21573688164,
+      "reservation_price": 63230.649999999994,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 8.565736881646444,
+      "ask_distance_from_mid": 8.565736881646444,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63230.6,
+          "quantity": 1.667
+        },
+        {
+          "price": 63230.5,
+          "quantity": 0.003
+        },
+        {
+          "price": 63230.4,
+          "quantity": 0.08
+        },
+        {
+          "price": 63230.3,
+          "quantity": 0.002
+        },
+        {
+          "price": 63230.2,
+          "quantity": 0.002
+        },
+        {
+          "price": 63230.0,
+          "quantity": 0.15
+        },
+        {
+          "price": 63229.8,
+          "quantity": 0.001
+        },
+        {
+          "price": 63229.7,
+          "quantity": 0.002
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63230.7,
+          "quantity": 3.41
+        },
+        {
+          "price": 63230.8,
+          "quantity": 3.599
+        },
+        {
+          "price": 63230.9,
+          "quantity": 0.002
+        },
+        {
+          "price": 63231.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63231.5,
+          "quantity": 0.02
+        },
+        {
+          "price": 63231.7,
+          "quantity": 0.089
+        },
+        {
+          "price": 63231.9,
+          "quantity": 0.003
+        },
+        {
+          "price": 63232.0,
+          "quantity": 0.001
+        }
+      ],
+      "cash": 100000.0,
+      "inventory": 0.0,
+      "fees_paid": 0.0,
+      "equity": 100000.0
+    },
+    {
+      "step": 5,
+      "mid_price": 63230.649999999994,
+      "market_spread": 0.09999999999854481,
+      "bid": 63222.08426311835,
+      "ask": 63239.21573688164,
+      "reservation_price": 63230.649999999994,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 8.565736881646444,
+      "ask_distance_from_mid": 8.565736881646444,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63230.6,
+          "quantity": 2.415
+        },
+        {
+          "price": 63230.5,
+          "quantity": 0.003
+        },
+        {
+          "price": 63230.4,
+          "quantity": 0.08
+        },
+        {
+          "price": 63230.3,
+          "quantity": 0.002
+        },
+        {
+          "price": 63230.2,
+          "quantity": 0.002
+        },
+        {
+          "price": 63230.1,
+          "quantity": 0.001
+        },
+        {
+          "price": 63230.0,
+          "quantity": 0.15
+        },
+        {
+          "price": 63229.8,
+          "quantity": 0.004
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63230.7,
+          "quantity": 2.364
+        },
+        {
+          "price": 63230.8,
+          "quantity": 3.599
+        },
+        {
+          "price": 63230.9,
+          "quantity": 0.002
+        },
+        {
+          "price": 63231.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63231.5,
+          "quantity": 0.003
+        },
+        {
+          "price": 63231.7,
+          "quantity": 0.001
+        },
+        {
+          "price": 63231.9,
+          "quantity": 0.003
+        },
+        {
+          "price": 63232.2,
+          "quantity": 0.004
+        }
+      ],
+      "cash": 100000.0,
+      "inventory": 0.0,
+      "fees_paid": 0.0,
+      "equity": 100000.0
+    },
+    {
+      "step": 6,
+      "mid_price": 63230.75,
+      "market_spread": 0.10000000000582077,
+      "bid": 63222.18426311835,
+      "ask": 63239.31573688165,
+      "reservation_price": 63230.75,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 8.565736881646444,
+      "ask_distance_from_mid": 8.565736881646444,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63230.7,
+          "quantity": 6.809
+        },
+        {
+          "price": 63230.6,
+          "quantity": 0.127
+        },
+        {
+          "price": 63230.5,
+          "quantity": 0.05
+        },
+        {
+          "price": 63230.4,
+          "quantity": 0.08
+        },
+        {
+          "price": 63230.2,
+          "quantity": 0.002
+        },
+        {
+          "price": 63230.1,
+          "quantity": 0.001
+        },
+        {
+          "price": 63230.0,
+          "quantity": 0.15
+        },
+        {
+          "price": 63229.8,
+          "quantity": 0.004
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63230.8,
+          "quantity": 4.277
+        },
+        {
+          "price": 63230.9,
+          "quantity": 0.007
+        },
+        {
+          "price": 63231.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63231.5,
+          "quantity": 0.005
+        },
+        {
+          "price": 63231.7,
+          "quantity": 0.001
+        },
+        {
+          "price": 63232.1,
+          "quantity": 0.002
+        },
+        {
+          "price": 63232.2,
+          "quantity": 0.004
+        },
+        {
+          "price": 63232.4,
+          "quantity": 0.001
+        }
+      ],
+      "cash": 100000.0,
+      "inventory": 0.0,
+      "fees_paid": 0.0,
+      "equity": 100000.0
+    },
+    {
+      "step": 7,
+      "mid_price": 63230.75,
+      "market_spread": 0.10000000000582077,
+      "bid": 63222.18426311835,
+      "ask": 63239.31573688165,
+      "reservation_price": 63230.75,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 8.565736881646444,
+      "ask_distance_from_mid": 8.565736881646444,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63230.7,
+          "quantity": 6.017
+        },
+        {
+          "price": 63230.6,
+          "quantity": 0.062
+        },
+        {
+          "price": 63230.5,
+          "quantity": 0.001
+        },
+        {
+          "price": 63230.4,
+          "quantity": 0.08
+        },
+        {
+          "price": 63230.2,
+          "quantity": 0.006
+        },
+        {
+          "price": 63230.1,
+          "quantity": 0.001
+        },
+        {
+          "price": 63230.0,
+          "quantity": 0.15
+        },
+        {
+          "price": 63229.8,
+          "quantity": 0.004
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63230.8,
+          "quantity": 3.649
+        },
+        {
+          "price": 63230.9,
+          "quantity": 0.003
+        },
+        {
+          "price": 63231.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63231.3,
+          "quantity": 0.002
+        },
+        {
+          "price": 63231.5,
+          "quantity": 0.005
+        },
+        {
+          "price": 63231.7,
+          "quantity": 0.001
+        },
+        {
+          "price": 63232.1,
+          "quantity": 0.002
+        },
+        {
+          "price": 63232.2,
+          "quantity": 0.004
+        }
+      ],
+      "cash": 100000.0,
+      "inventory": 0.0,
+      "fees_paid": 0.0,
+      "equity": 100000.0
+    },
+    {
+      "step": 8,
+      "mid_price": 63230.75,
+      "market_spread": 0.10000000000582077,
+      "bid": 63222.18426311835,
+      "ask": 63239.31573688165,
+      "reservation_price": 63230.75,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 8.565736881646444,
+      "ask_distance_from_mid": 8.565736881646444,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63230.7,
+          "quantity": 6.282
+        },
+        {
+          "price": 63230.6,
+          "quantity": 0.49
+        },
+        {
+          "price": 63230.5,
+          "quantity": 2.199
+        },
+        {
+          "price": 63230.4,
+          "quantity": 0.08
+        },
+        {
+          "price": 63230.2,
+          "quantity": 0.006
+        },
+        {
+          "price": 63230.1,
+          "quantity": 0.001
+        },
+        {
+          "price": 63230.0,
+          "quantity": 0.15
+        },
+        {
+          "price": 63229.8,
+          "quantity": 0.616
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63230.8,
+          "quantity": 0.681
+        },
+        {
+          "price": 63230.9,
+          "quantity": 0.002
+        },
+        {
+          "price": 63231.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63231.3,
+          "quantity": 0.002
+        },
+        {
+          "price": 63231.5,
+          "quantity": 0.005
+        },
+        {
+          "price": 63231.7,
+          "quantity": 0.001
+        },
+        {
+          "price": 63232.1,
+          "quantity": 0.002
+        },
+        {
+          "price": 63232.2,
+          "quantity": 0.004
+        }
+      ],
+      "cash": 100000.0,
+      "inventory": 0.0,
+      "fees_paid": 0.0,
+      "equity": 100000.0
+    },
+    {
+      "step": 9,
+      "mid_price": 63235.75,
+      "market_spread": 0.10000000000582077,
+      "bid": 63227.18426311835,
+      "ask": 63244.31573688165,
+      "reservation_price": 63235.75,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 8.565736881646444,
+      "ask_distance_from_mid": 8.565736881646444,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63235.7,
+          "quantity": 13.237
+        },
+        {
+          "price": 63235.6,
+          "quantity": 0.003
+        },
+        {
+          "price": 63235.2,
+          "quantity": 0.001
+        },
+        {
+          "price": 63235.1,
+          "quantity": 0.15
+        },
+        {
+          "price": 63234.9,
+          "quantity": 0.001
+        },
+        {
+          "price": 63234.8,
+          "quantity": 0.003
+        },
+        {
+          "price": 63234.6,
+          "quantity": 0.003
+        },
+        {
+          "price": 63234.5,
+          "quantity": 0.558
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63235.8,
+          "quantity": 0.18
+        },
+        {
+          "price": 63235.9,
+          "quantity": 0.003
+        },
+        {
+          "price": 63236.3,
+          "quantity": 0.002
+        },
+        {
+          "price": 63236.4,
+          "quantity": 0.026
+        },
+        {
+          "price": 63236.9,
+          "quantity": 0.008
+        },
+        {
+          "price": 63237.2,
+          "quantity": 0.011
+        },
+        {
+          "price": 63237.3,
+          "quantity": 0.002
+        },
+        {
+          "price": 63237.6,
+          "quantity": 0.002
+        }
+      ],
+      "cash": 100000.0,
+      "inventory": 0.0,
+      "fees_paid": 0.0,
+      "equity": 100000.0
+    },
+    {
+      "step": 10,
+      "mid_price": 63237.649999999994,
+      "market_spread": 0.09999999999854481,
+      "bid": 63229.08426311835,
+      "ask": 63246.21573688164,
+      "reservation_price": 63237.649999999994,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 8.565736881646444,
+      "ask_distance_from_mid": 8.565736881646444,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63237.6,
+          "quantity": 11.415
+        },
+        {
+          "price": 63237.5,
+          "quantity": 0.003
+        },
+        {
+          "price": 63237.4,
+          "quantity": 0.27
+        },
+        {
+          "price": 63237.3,
+          "quantity": 1.035
+        },
+        {
+          "price": 63237.2,
+          "quantity": 1.501
+        },
+        {
+          "price": 63237.1,
+          "quantity": 0.349
+        },
+        {
+          "price": 63236.9,
+          "quantity": 0.002
+        },
+        {
+          "price": 63236.8,
+          "quantity": 0.365
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63237.7,
+          "quantity": 0.067
+        },
+        {
+          "price": 63237.8,
+          "quantity": 0.002
+        },
+        {
+          "price": 63237.9,
+          "quantity": 0.001
+        },
+        {
+          "price": 63238.3,
+          "quantity": 0.002
+        },
+        {
+          "price": 63238.6,
+          "quantity": 0.001
+        },
+        {
+          "price": 63239.0,
+          "quantity": 0.037
+        },
+        {
+          "price": 63239.1,
+          "quantity": 0.001
+        },
+        {
+          "price": 63239.2,
+          "quantity": 0.078
+        }
+      ],
+      "cash": 100000.0,
+      "inventory": 0.0,
+      "fees_paid": 0.0,
+      "equity": 100000.0
+    },
+    {
+      "step": 11,
+      "mid_price": 63239.149999999994,
+      "market_spread": 0.09999999999854481,
+      "bid": 63230.58426311835,
+      "ask": 63247.71573688164,
+      "reservation_price": 63239.149999999994,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 8.565736881646444,
+      "ask_distance_from_mid": 8.565736881646444,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63239.1,
+          "quantity": 34.126
+        },
+        {
+          "price": 63239.0,
+          "quantity": 1.207
+        },
+        {
+          "price": 63238.9,
+          "quantity": 0.149
+        },
+        {
+          "price": 63238.8,
+          "quantity": 0.002
+        },
+        {
+          "price": 63238.7,
+          "quantity": 0.001
+        },
+        {
+          "price": 63238.5,
+          "quantity": 0.003
+        },
+        {
+          "price": 63238.4,
+          "quantity": 0.082
+        },
+        {
+          "price": 63238.3,
+          "quantity": 0.15
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63239.2,
+          "quantity": 0.766
+        },
+        {
+          "price": 63239.3,
+          "quantity": 0.001
+        },
+        {
+          "price": 63239.4,
+          "quantity": 0.001
+        },
+        {
+          "price": 63239.5,
+          "quantity": 0.002
+        },
+        {
+          "price": 63239.6,
+          "quantity": 0.001
+        },
+        {
+          "price": 63240.0,
+          "quantity": 0.068
+        },
+        {
+          "price": 63240.1,
+          "quantity": 0.001
+        },
+        {
+          "price": 63240.2,
+          "quantity": 0.002
+        }
+      ],
+      "cash": 100000.0,
+      "inventory": 0.0,
+      "fees_paid": 0.0,
+      "equity": 100000.0
+    },
+    {
+      "step": 12,
+      "mid_price": 63246.850000000006,
+      "market_spread": 0.09999999999854481,
+      "bid": 63238.28426311836,
+      "ask": 63255.41573688165,
+      "reservation_price": 63246.850000000006,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 8.565736881646444,
+      "ask_distance_from_mid": 8.565736881646444,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63246.8,
+          "quantity": 6.084
+        },
+        {
+          "price": 63246.7,
+          "quantity": 0.002
+        },
+        {
+          "price": 63246.5,
+          "quantity": 0.002
+        },
+        {
+          "price": 63246.4,
+          "quantity": 0.08
+        },
+        {
+          "price": 63246.2,
+          "quantity": 0.151
+        },
+        {
+          "price": 63246.1,
+          "quantity": 0.001
+        },
+        {
+          "price": 63246.0,
+          "quantity": 0.002
+        },
+        {
+          "price": 63245.9,
+          "quantity": 0.003
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63246.9,
+          "quantity": 1.719
+        },
+        {
+          "price": 63247.0,
+          "quantity": 0.002
+        },
+        {
+          "price": 63247.1,
+          "quantity": 0.001
+        },
+        {
+          "price": 63247.2,
+          "quantity": 0.003
+        },
+        {
+          "price": 63247.7,
+          "quantity": 0.003
+        },
+        {
+          "price": 63247.8,
+          "quantity": 0.188
+        },
+        {
+          "price": 63247.9,
+          "quantity": 0.003
+        },
+        {
+          "price": 63248.1,
+          "quantity": 0.001
+        }
+      ],
+      "cash": 100000.0,
+      "inventory": 0.0,
+      "fees_paid": 0.0,
+      "equity": 100000.0
+    },
+    {
+      "step": 13,
+      "mid_price": 63246.850000000006,
+      "market_spread": 0.09999999999854481,
+      "bid": 63238.28426311836,
+      "ask": 63255.41573688165,
+      "reservation_price": 63246.850000000006,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 8.565736881646444,
+      "ask_distance_from_mid": 8.565736881646444,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63246.8,
+          "quantity": 50.159
+        },
+        {
+          "price": 63246.7,
+          "quantity": 0.008
+        },
+        {
+          "price": 63246.6,
+          "quantity": 0.004
+        },
+        {
+          "price": 63246.5,
+          "quantity": 0.092
+        },
+        {
+          "price": 63246.4,
+          "quantity": 0.16
+        },
+        {
+          "price": 63246.3,
+          "quantity": 0.004
+        },
+        {
+          "price": 63246.2,
+          "quantity": 0.232
+        },
+        {
+          "price": 63246.1,
+          "quantity": 0.081
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63246.9,
+          "quantity": 1.972
+        },
+        {
+          "price": 63247.0,
+          "quantity": 0.002
+        },
+        {
+          "price": 63247.1,
+          "quantity": 0.001
+        },
+        {
+          "price": 63247.2,
+          "quantity": 0.003
+        },
+        {
+          "price": 63247.7,
+          "quantity": 0.003
+        },
+        {
+          "price": 63247.8,
+          "quantity": 0.186
+        },
+        {
+          "price": 63247.9,
+          "quantity": 0.003
+        },
+        {
+          "price": 63248.1,
+          "quantity": 0.001
+        }
+      ],
+      "cash": 100000.0,
+      "inventory": 0.0,
+      "fees_paid": 0.0,
+      "equity": 100000.0
+    },
+    {
+      "step": 14,
+      "mid_price": 63246.850000000006,
+      "market_spread": 0.09999999999854481,
+      "bid": 63238.28426311836,
+      "ask": 63255.41573688165,
+      "reservation_price": 63246.850000000006,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 8.565736881646444,
+      "ask_distance_from_mid": 8.565736881646444,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63246.8,
+          "quantity": 72.416
+        },
+        {
+          "price": 63246.7,
+          "quantity": 0.01
+        },
+        {
+          "price": 63246.6,
+          "quantity": 0.004
+        },
+        {
+          "price": 63246.5,
+          "quantity": 0.092
+        },
+        {
+          "price": 63246.4,
+          "quantity": 0.16
+        },
+        {
+          "price": 63246.3,
+          "quantity": 0.004
+        },
+        {
+          "price": 63246.2,
+          "quantity": 0.232
+        },
+        {
+          "price": 63246.1,
+          "quantity": 0.081
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63246.9,
+          "quantity": 1.892
+        },
+        {
+          "price": 63247.0,
+          "quantity": 0.002
+        },
+        {
+          "price": 63247.1,
+          "quantity": 0.001
+        },
+        {
+          "price": 63247.2,
+          "quantity": 0.003
+        },
+        {
+          "price": 63247.7,
+          "quantity": 0.003
+        },
+        {
+          "price": 63247.8,
+          "quantity": 0.186
+        },
+        {
+          "price": 63247.9,
+          "quantity": 0.003
+        },
+        {
+          "price": 63248.1,
+          "quantity": 0.001
+        }
+      ],
+      "cash": 100000.0,
+      "inventory": 0.0,
+      "fees_paid": 0.0,
+      "equity": 100000.0
+    },
+    {
+      "step": 15,
+      "mid_price": 63249.95,
+      "market_spread": 0.09999999999854481,
+      "bid": 63241.38426311835,
+      "ask": 63258.51573688164,
+      "reservation_price": 63249.95,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 8.565736881646444,
+      "ask_distance_from_mid": 8.565736881646444,
+      "fills": 1,
+      "buy_fills": 0,
+      "sell_fills": 1,
+      "fill_details": [
+        {
+          "side": "sell",
+          "price": 63258.51573688164,
+          "quantity": 0.05,
+          "notional": 3162.9257868440823
+        }
+      ],
+      "book_bids": [
+        {
+          "price": 63249.9,
+          "quantity": 16.532
+        },
+        {
+          "price": 63249.8,
+          "quantity": 0.009
+        },
+        {
+          "price": 63249.7,
+          "quantity": 0.002
+        },
+        {
+          "price": 63249.6,
+          "quantity": 0.08
+        },
+        {
+          "price": 63249.3,
+          "quantity": 0.152
+        },
+        {
+          "price": 63249.2,
+          "quantity": 0.003
+        },
+        {
+          "price": 63249.1,
+          "quantity": 0.002
+        },
+        {
+          "price": 63248.8,
+          "quantity": 0.08
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63250.0,
+          "quantity": 4.474
+        },
+        {
+          "price": 63250.1,
+          "quantity": 0.006
+        },
+        {
+          "price": 63250.2,
+          "quantity": 0.001
+        },
+        {
+          "price": 63250.5,
+          "quantity": 0.001
+        },
+        {
+          "price": 63251.0,
+          "quantity": 0.007
+        },
+        {
+          "price": 63251.2,
+          "quantity": 0.008
+        },
+        {
+          "price": 63251.7,
+          "quantity": 0.001
+        },
+        {
+          "price": 63251.8,
+          "quantity": 0.05
+        }
+      ],
+      "cash": 103162.29320168671,
+      "inventory": -0.05,
+      "fees_paid": 0.6325851573688165,
+      "equity": 99999.22070168672
+    },
+    {
+      "step": 16,
+      "mid_price": 63261.45,
+      "market_spread": 0.09999999999854481,
+      "bid": 63253.69108515225,
+      "ask": 63270.82255891554,
+      "reservation_price": 63262.256822033894,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 7.758914847749111,
+      "ask_distance_from_mid": 9.372558915543777,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63261.4,
+          "quantity": 3.572
+        },
+        {
+          "price": 63261.3,
+          "quantity": 0.004
+        },
+        {
+          "price": 63261.2,
+          "quantity": 0.002
+        },
+        {
+          "price": 63261.1,
+          "quantity": 0.002
+        },
+        {
+          "price": 63260.9,
+          "quantity": 0.001
+        },
+        {
+          "price": 63260.8,
+          "quantity": 0.23
+        },
+        {
+          "price": 63260.5,
+          "quantity": 0.002
+        },
+        {
+          "price": 63260.0,
+          "quantity": 0.084
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63261.5,
+          "quantity": 2.711
+        },
+        {
+          "price": 63261.6,
+          "quantity": 0.003
+        },
+        {
+          "price": 63261.7,
+          "quantity": 0.012
+        },
+        {
+          "price": 63262.0,
+          "quantity": 0.017
+        },
+        {
+          "price": 63262.1,
+          "quantity": 0.048
+        },
+        {
+          "price": 63262.4,
+          "quantity": 0.002
+        },
+        {
+          "price": 63262.5,
+          "quantity": 0.001
+        },
+        {
+          "price": 63262.6,
+          "quantity": 0.001
+        }
+      ],
+      "cash": 103162.29320168671,
+      "inventory": -0.05,
+      "fees_paid": 0.6325851573688165,
+      "equity": 99999.22070168672
+    },
+    {
+      "step": 17,
+      "mid_price": 63261.45,
+      "market_spread": 0.09999999999854481,
+      "bid": 63253.69108515225,
+      "ask": 63270.82255891554,
+      "reservation_price": 63262.256822033894,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 7.758914847749111,
+      "ask_distance_from_mid": 9.372558915543777,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63261.4,
+          "quantity": 25.732
+        },
+        {
+          "price": 63261.3,
+          "quantity": 0.008
+        },
+        {
+          "price": 63261.2,
+          "quantity": 0.002
+        },
+        {
+          "price": 63261.1,
+          "quantity": 0.002
+        },
+        {
+          "price": 63261.0,
+          "quantity": 0.016
+        },
+        {
+          "price": 63260.9,
+          "quantity": 0.002
+        },
+        {
+          "price": 63260.8,
+          "quantity": 0.23
+        },
+        {
+          "price": 63260.5,
+          "quantity": 0.004
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63261.5,
+          "quantity": 4.905
+        },
+        {
+          "price": 63261.6,
+          "quantity": 0.004
+        },
+        {
+          "price": 63261.7,
+          "quantity": 0.009
+        },
+        {
+          "price": 63261.8,
+          "quantity": 0.006
+        },
+        {
+          "price": 63262.4,
+          "quantity": 0.002
+        },
+        {
+          "price": 63262.5,
+          "quantity": 0.001
+        },
+        {
+          "price": 63262.6,
+          "quantity": 0.001
+        },
+        {
+          "price": 63262.8,
+          "quantity": 0.007
+        }
+      ],
+      "cash": 103162.29320168671,
+      "inventory": -0.05,
+      "fees_paid": 0.6325851573688165,
+      "equity": 99999.22070168672
+    },
+    {
+      "step": 18,
+      "mid_price": 63261.45,
+      "market_spread": 0.09999999999854481,
+      "bid": 63253.69108515225,
+      "ask": 63270.82255891554,
+      "reservation_price": 63262.256822033894,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 7.758914847749111,
+      "ask_distance_from_mid": 9.372558915543777,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63261.4,
+          "quantity": 25.539
+        },
+        {
+          "price": 63261.3,
+          "quantity": 0.008
+        },
+        {
+          "price": 63261.2,
+          "quantity": 0.004
+        },
+        {
+          "price": 63261.1,
+          "quantity": 0.002
+        },
+        {
+          "price": 63261.0,
+          "quantity": 0.016
+        },
+        {
+          "price": 63260.9,
+          "quantity": 0.002
+        },
+        {
+          "price": 63260.8,
+          "quantity": 0.23
+        },
+        {
+          "price": 63260.5,
+          "quantity": 0.004
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63261.5,
+          "quantity": 8.212
+        },
+        {
+          "price": 63261.6,
+          "quantity": 0.225
+        },
+        {
+          "price": 63261.7,
+          "quantity": 0.01
+        },
+        {
+          "price": 63261.8,
+          "quantity": 0.006
+        },
+        {
+          "price": 63261.9,
+          "quantity": 0.003
+        },
+        {
+          "price": 63262.0,
+          "quantity": 0.048
+        },
+        {
+          "price": 63262.1,
+          "quantity": 0.003
+        },
+        {
+          "price": 63262.4,
+          "quantity": 0.002
+        }
+      ],
+      "cash": 103162.29320168671,
+      "inventory": -0.05,
+      "fees_paid": 0.6325851573688165,
+      "equity": 99999.54320168671
+    },
+    {
+      "step": 19,
+      "mid_price": 63255.0,
+      "market_spread": 0.19999999999708962,
+      "bid": 63247.24108515225,
+      "ask": 63264.372558915544,
+      "reservation_price": 63255.8068220339,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 7.758914847749111,
+      "ask_distance_from_mid": 9.372558915543777,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63254.9,
+          "quantity": 0.064
+        },
+        {
+          "price": 63254.8,
+          "quantity": 0.003
+        },
+        {
+          "price": 63254.7,
+          "quantity": 0.001
+        },
+        {
+          "price": 63254.4,
+          "quantity": 0.131
+        },
+        {
+          "price": 63254.1,
+          "quantity": 0.003
+        },
+        {
+          "price": 63254.0,
+          "quantity": 0.006
+        },
+        {
+          "price": 63253.7,
+          "quantity": 0.001
+        },
+        {
+          "price": 63253.3,
+          "quantity": 0.006
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63255.1,
+          "quantity": 6.325
+        },
+        {
+          "price": 63255.5,
+          "quantity": 0.446
+        },
+        {
+          "price": 63255.6,
+          "quantity": 0.032
+        },
+        {
+          "price": 63255.7,
+          "quantity": 3.493
+        },
+        {
+          "price": 63255.8,
+          "quantity": 0.054
+        },
+        {
+          "price": 63256.1,
+          "quantity": 4.574
+        },
+        {
+          "price": 63256.2,
+          "quantity": 0.591
+        },
+        {
+          "price": 63256.3,
+          "quantity": 0.019
+        }
+      ],
+      "cash": 103162.29320168671,
+      "inventory": -0.05,
+      "fees_paid": 0.6325851573688165,
+      "equity": 99999.79570168671
+    },
+    {
+      "step": 20,
+      "mid_price": 63249.95,
+      "market_spread": 0.09999999999854481,
+      "bid": 63242.19108515225,
+      "ask": 63259.32255891554,
+      "reservation_price": 63250.756822033894,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 7.758914847749111,
+      "ask_distance_from_mid": 9.372558915543777,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63249.9,
+          "quantity": 2.471
+        },
+        {
+          "price": 63249.8,
+          "quantity": 0.008
+        },
+        {
+          "price": 63249.7,
+          "quantity": 0.002
+        },
+        {
+          "price": 63249.6,
+          "quantity": 0.001
+        },
+        {
+          "price": 63249.4,
+          "quantity": 0.15
+        },
+        {
+          "price": 63249.3,
+          "quantity": 0.001
+        },
+        {
+          "price": 63249.2,
+          "quantity": 0.003
+        },
+        {
+          "price": 63249.1,
+          "quantity": 0.002
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63250.0,
+          "quantity": 11.56
+        },
+        {
+          "price": 63250.1,
+          "quantity": 0.751
+        },
+        {
+          "price": 63250.2,
+          "quantity": 0.001
+        },
+        {
+          "price": 63250.3,
+          "quantity": 0.013
+        },
+        {
+          "price": 63250.5,
+          "quantity": 0.003
+        },
+        {
+          "price": 63250.7,
+          "quantity": 0.001
+        },
+        {
+          "price": 63251.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63251.4,
+          "quantity": 0.001
+        }
+      ],
+      "cash": 103162.29320168671,
+      "inventory": -0.05,
+      "fees_paid": 0.6325851573688165,
+      "equity": 99999.79570168671
+    },
+    {
+      "step": 21,
+      "mid_price": 63249.95,
+      "market_spread": 0.09999999999854481,
+      "bid": 63242.19108515225,
+      "ask": 63259.32255891554,
+      "reservation_price": 63250.756822033894,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 7.758914847749111,
+      "ask_distance_from_mid": 9.372558915543777,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63249.9,
+          "quantity": 1.879
+        },
+        {
+          "price": 63249.8,
+          "quantity": 0.154
+        },
+        {
+          "price": 63249.7,
+          "quantity": 0.002
+        },
+        {
+          "price": 63249.6,
+          "quantity": 0.001
+        },
+        {
+          "price": 63249.4,
+          "quantity": 0.15
+        },
+        {
+          "price": 63249.3,
+          "quantity": 0.001
+        },
+        {
+          "price": 63249.2,
+          "quantity": 0.003
+        },
+        {
+          "price": 63249.1,
+          "quantity": 0.002
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63250.0,
+          "quantity": 8.952
+        },
+        {
+          "price": 63250.1,
+          "quantity": 3.494
+        },
+        {
+          "price": 63250.2,
+          "quantity": 0.001
+        },
+        {
+          "price": 63250.3,
+          "quantity": 0.093
+        },
+        {
+          "price": 63250.5,
+          "quantity": 0.003
+        },
+        {
+          "price": 63250.6,
+          "quantity": 0.08
+        },
+        {
+          "price": 63250.7,
+          "quantity": 0.001
+        },
+        {
+          "price": 63250.8,
+          "quantity": 0.08
+        }
+      ],
+      "cash": 103162.29320168671,
+      "inventory": -0.05,
+      "fees_paid": 0.6325851573688165,
+      "equity": 100000.16070168672
+    },
+    {
+      "step": 22,
+      "mid_price": 63242.649999999994,
+      "market_spread": 0.09999999999854481,
+      "bid": 63234.891085152245,
+      "ask": 63252.02255891554,
+      "reservation_price": 63243.45682203389,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 7.758914847749111,
+      "ask_distance_from_mid": 9.372558915543777,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63242.6,
+          "quantity": 0.213
+        },
+        {
+          "price": 63242.4,
+          "quantity": 0.002
+        },
+        {
+          "price": 63242.3,
+          "quantity": 0.003
+        },
+        {
+          "price": 63242.2,
+          "quantity": 0.001
+        },
+        {
+          "price": 63241.4,
+          "quantity": 0.001
+        },
+        {
+          "price": 63241.2,
+          "quantity": 0.001
+        },
+        {
+          "price": 63240.9,
+          "quantity": 0.001
+        },
+        {
+          "price": 63240.8,
+          "quantity": 0.001
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63242.7,
+          "quantity": 11.927
+        },
+        {
+          "price": 63242.8,
+          "quantity": 0.001
+        },
+        {
+          "price": 63243.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63243.1,
+          "quantity": 0.706
+        },
+        {
+          "price": 63243.2,
+          "quantity": 1.585
+        },
+        {
+          "price": 63243.3,
+          "quantity": 0.3
+        },
+        {
+          "price": 63243.4,
+          "quantity": 0.001
+        },
+        {
+          "price": 63243.5,
+          "quantity": 0.083
+        }
+      ],
+      "cash": 103162.29320168671,
+      "inventory": -0.05,
+      "fees_paid": 0.6325851573688165,
+      "equity": 100000.29070168671
+    },
+    {
+      "step": 23,
+      "mid_price": 63240.05,
+      "market_spread": 0.09999999999854481,
+      "bid": 63232.291085152254,
+      "ask": 63249.42255891555,
+      "reservation_price": 63240.8568220339,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 7.758914847749111,
+      "ask_distance_from_mid": 9.372558915543777,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63240.0,
+          "quantity": 1.529
+        },
+        {
+          "price": 63239.9,
+          "quantity": 0.001
+        },
+        {
+          "price": 63239.8,
+          "quantity": 0.002
+        },
+        {
+          "price": 63239.7,
+          "quantity": 0.001
+        },
+        {
+          "price": 63239.6,
+          "quantity": 0.004
+        },
+        {
+          "price": 63239.4,
+          "quantity": 0.15
+        },
+        {
+          "price": 63239.2,
+          "quantity": 0.145
+        },
+        {
+          "price": 63239.1,
+          "quantity": 0.001
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63240.1,
+          "quantity": 13.461
+        },
+        {
+          "price": 63240.2,
+          "quantity": 0.858
+        },
+        {
+          "price": 63240.3,
+          "quantity": 0.003
+        },
+        {
+          "price": 63240.4,
+          "quantity": 0.01
+        },
+        {
+          "price": 63240.5,
+          "quantity": 0.003
+        },
+        {
+          "price": 63241.2,
+          "quantity": 0.048
+        },
+        {
+          "price": 63241.3,
+          "quantity": 0.001
+        },
+        {
+          "price": 63241.4,
+          "quantity": 0.001
+        }
+      ],
+      "cash": 103162.29320168671,
+      "inventory": -0.05,
+      "fees_paid": 0.6325851573688165,
+      "equity": 100000.60570168671
+    },
+    {
+      "step": 24,
+      "mid_price": 63233.75,
+      "market_spread": 0.10000000000582077,
+      "bid": 63225.99108515225,
+      "ask": 63243.122558915544,
+      "reservation_price": 63234.5568220339,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 7.758914847749111,
+      "ask_distance_from_mid": 9.372558915543777,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63233.7,
+          "quantity": 1.037
+        },
+        {
+          "price": 63233.4,
+          "quantity": 0.001
+        },
+        {
+          "price": 63233.3,
+          "quantity": 0.002
+        },
+        {
+          "price": 63233.2,
+          "quantity": 0.003
+        },
+        {
+          "price": 63233.1,
+          "quantity": 0.155
+        },
+        {
+          "price": 63233.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63232.9,
+          "quantity": 0.021
+        },
+        {
+          "price": 63232.8,
+          "quantity": 0.018
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63233.8,
+          "quantity": 3.342
+        },
+        {
+          "price": 63233.9,
+          "quantity": 0.006
+        },
+        {
+          "price": 63234.0,
+          "quantity": 0.002
+        },
+        {
+          "price": 63234.1,
+          "quantity": 0.003
+        },
+        {
+          "price": 63234.3,
+          "quantity": 0.003
+        },
+        {
+          "price": 63235.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63235.1,
+          "quantity": 0.002
+        },
+        {
+          "price": 63235.5,
+          "quantity": 0.003
+        }
+      ],
+      "cash": 103162.29320168671,
+      "inventory": -0.05,
+      "fees_paid": 0.6325851573688165,
+      "equity": 100000.60570168671
+    },
+    {
+      "step": 25,
+      "mid_price": 63233.75,
+      "market_spread": 0.10000000000582077,
+      "bid": 63225.99108515225,
+      "ask": 63243.122558915544,
+      "reservation_price": 63234.5568220339,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 7.758914847749111,
+      "ask_distance_from_mid": 9.372558915543777,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63233.7,
+          "quantity": 3.412
+        },
+        {
+          "price": 63233.6,
+          "quantity": 0.002
+        },
+        {
+          "price": 63233.5,
+          "quantity": 0.004
+        },
+        {
+          "price": 63233.3,
+          "quantity": 0.002
+        },
+        {
+          "price": 63233.2,
+          "quantity": 0.079
+        },
+        {
+          "price": 63233.1,
+          "quantity": 0.155
+        },
+        {
+          "price": 63233.0,
+          "quantity": 0.318
+        },
+        {
+          "price": 63232.9,
+          "quantity": 0.021
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63233.8,
+          "quantity": 0.793
+        },
+        {
+          "price": 63233.9,
+          "quantity": 0.004
+        },
+        {
+          "price": 63234.0,
+          "quantity": 0.002
+        },
+        {
+          "price": 63234.1,
+          "quantity": 0.013
+        },
+        {
+          "price": 63234.2,
+          "quantity": 0.003
+        },
+        {
+          "price": 63235.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63235.1,
+          "quantity": 0.002
+        },
+        {
+          "price": 63235.5,
+          "quantity": 0.003
+        }
+      ],
+      "cash": 103162.29320168671,
+      "inventory": -0.05,
+      "fees_paid": 0.6325851573688165,
+      "equity": 100000.60570168671
+    },
+    {
+      "step": 26,
+      "mid_price": 63233.75,
+      "market_spread": 0.10000000000582077,
+      "bid": 63225.99108515225,
+      "ask": 63243.122558915544,
+      "reservation_price": 63234.5568220339,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 7.758914847749111,
+      "ask_distance_from_mid": 9.372558915543777,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63233.7,
+          "quantity": 1.046
+        },
+        {
+          "price": 63233.6,
+          "quantity": 0.001
+        },
+        {
+          "price": 63233.5,
+          "quantity": 0.002
+        },
+        {
+          "price": 63233.3,
+          "quantity": 0.002
+        },
+        {
+          "price": 63233.2,
+          "quantity": 0.001
+        },
+        {
+          "price": 63233.1,
+          "quantity": 0.155
+        },
+        {
+          "price": 63233.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63232.9,
+          "quantity": 0.021
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63233.8,
+          "quantity": 6.335
+        },
+        {
+          "price": 63233.9,
+          "quantity": 0.418
+        },
+        {
+          "price": 63234.0,
+          "quantity": 0.002
+        },
+        {
+          "price": 63234.1,
+          "quantity": 0.013
+        },
+        {
+          "price": 63234.2,
+          "quantity": 0.003
+        },
+        {
+          "price": 63235.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63235.1,
+          "quantity": 0.002
+        },
+        {
+          "price": 63235.5,
+          "quantity": 0.003
+        }
+      ],
+      "cash": 103162.29320168671,
+      "inventory": -0.05,
+      "fees_paid": 0.6325851573688165,
+      "equity": 100000.60570168671
+    },
+    {
+      "step": 27,
+      "mid_price": 63233.75,
+      "market_spread": 0.10000000000582077,
+      "bid": 63225.99108515225,
+      "ask": 63243.122558915544,
+      "reservation_price": 63234.5568220339,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 7.758914847749111,
+      "ask_distance_from_mid": 9.372558915543777,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63233.7,
+          "quantity": 1.75
+        },
+        {
+          "price": 63233.6,
+          "quantity": 0.002
+        },
+        {
+          "price": 63233.5,
+          "quantity": 0.002
+        },
+        {
+          "price": 63233.3,
+          "quantity": 0.002
+        },
+        {
+          "price": 63233.2,
+          "quantity": 0.001
+        },
+        {
+          "price": 63233.1,
+          "quantity": 0.155
+        },
+        {
+          "price": 63233.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63232.9,
+          "quantity": 0.021
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63233.8,
+          "quantity": 3.389
+        },
+        {
+          "price": 63233.9,
+          "quantity": 0.636
+        },
+        {
+          "price": 63234.0,
+          "quantity": 0.002
+        },
+        {
+          "price": 63234.1,
+          "quantity": 0.013
+        },
+        {
+          "price": 63234.2,
+          "quantity": 0.003
+        },
+        {
+          "price": 63235.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63235.1,
+          "quantity": 0.002
+        },
+        {
+          "price": 63235.4,
+          "quantity": 0.003
+        }
+      ],
+      "cash": 103162.29320168671,
+      "inventory": -0.05,
+      "fees_paid": 0.6325851573688165,
+      "equity": 100000.60570168671
+    },
+    {
+      "step": 28,
+      "mid_price": 63233.75,
+      "market_spread": 0.10000000000582077,
+      "bid": 63225.99108515225,
+      "ask": 63243.122558915544,
+      "reservation_price": 63234.5568220339,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 7.758914847749111,
+      "ask_distance_from_mid": 9.372558915543777,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63233.7,
+          "quantity": 0.541
+        },
+        {
+          "price": 63233.6,
+          "quantity": 0.001
+        },
+        {
+          "price": 63233.5,
+          "quantity": 0.002
+        },
+        {
+          "price": 63233.3,
+          "quantity": 0.002
+        },
+        {
+          "price": 63233.2,
+          "quantity": 0.001
+        },
+        {
+          "price": 63233.1,
+          "quantity": 0.155
+        },
+        {
+          "price": 63233.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63232.9,
+          "quantity": 0.021
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63233.8,
+          "quantity": 3.575
+        },
+        {
+          "price": 63233.9,
+          "quantity": 0.931
+        },
+        {
+          "price": 63234.0,
+          "quantity": 0.002
+        },
+        {
+          "price": 63234.1,
+          "quantity": 0.093
+        },
+        {
+          "price": 63234.2,
+          "quantity": 0.003
+        },
+        {
+          "price": 63234.4,
+          "quantity": 0.08
+        },
+        {
+          "price": 63234.6,
+          "quantity": 0.08
+        },
+        {
+          "price": 63235.0,
+          "quantity": 0.001
+        }
+      ],
+      "cash": 103162.29320168671,
+      "inventory": -0.05,
+      "fees_paid": 0.6325851573688165,
+      "equity": 100000.60570168671
+    },
+    {
+      "step": 29,
+      "mid_price": 63233.75,
+      "market_spread": 0.10000000000582077,
+      "bid": 63225.99108515225,
+      "ask": 63243.122558915544,
+      "reservation_price": 63234.5568220339,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 7.758914847749111,
+      "ask_distance_from_mid": 9.372558915543777,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63233.7,
+          "quantity": 1.192
+        },
+        {
+          "price": 63233.6,
+          "quantity": 0.001
+        },
+        {
+          "price": 63233.5,
+          "quantity": 0.002
+        },
+        {
+          "price": 63233.3,
+          "quantity": 0.002
+        },
+        {
+          "price": 63233.2,
+          "quantity": 0.001
+        },
+        {
+          "price": 63233.1,
+          "quantity": 0.155
+        },
+        {
+          "price": 63233.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63232.9,
+          "quantity": 0.028
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63233.8,
+          "quantity": 3.719
+        },
+        {
+          "price": 63233.9,
+          "quantity": 0.557
+        },
+        {
+          "price": 63234.0,
+          "quantity": 0.002
+        },
+        {
+          "price": 63234.1,
+          "quantity": 0.013
+        },
+        {
+          "price": 63234.2,
+          "quantity": 0.003
+        },
+        {
+          "price": 63234.6,
+          "quantity": 0.002
+        },
+        {
+          "price": 63235.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63235.1,
+          "quantity": 0.002
+        }
+      ],
+      "cash": 103162.29320168671,
+      "inventory": -0.05,
+      "fees_paid": 0.6325851573688165,
+      "equity": 100000.79070168671
+    },
+    {
+      "step": 30,
+      "mid_price": 63230.05,
+      "market_spread": 0.09999999999854481,
+      "bid": 63222.291085152254,
+      "ask": 63239.42255891555,
+      "reservation_price": 63230.8568220339,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 7.758914847749111,
+      "ask_distance_from_mid": 9.372558915543777,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63230.0,
+          "quantity": 0.773
+        },
+        {
+          "price": 63229.9,
+          "quantity": 0.001
+        },
+        {
+          "price": 63229.8,
+          "quantity": 0.005
+        },
+        {
+          "price": 63229.7,
+          "quantity": 0.002
+        },
+        {
+          "price": 63229.6,
+          "quantity": 0.001
+        },
+        {
+          "price": 63229.5,
+          "quantity": 0.062
+        },
+        {
+          "price": 63229.4,
+          "quantity": 0.15
+        },
+        {
+          "price": 63229.3,
+          "quantity": 0.001
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63230.1,
+          "quantity": 13.144
+        },
+        {
+          "price": 63230.2,
+          "quantity": 0.002
+        },
+        {
+          "price": 63230.4,
+          "quantity": 0.002
+        },
+        {
+          "price": 63230.5,
+          "quantity": 2.099
+        },
+        {
+          "price": 63230.6,
+          "quantity": 2.496
+        },
+        {
+          "price": 63230.7,
+          "quantity": 0.002
+        },
+        {
+          "price": 63231.3,
+          "quantity": 0.555
+        },
+        {
+          "price": 63231.4,
+          "quantity": 0.08
+        }
+      ],
+      "cash": 103162.29320168671,
+      "inventory": -0.05,
+      "fees_paid": 0.6325851573688165,
+      "equity": 100000.47570168671
+    },
+    {
+      "step": 31,
+      "mid_price": 63236.350000000006,
+      "market_spread": 0.09999999999854481,
+      "bid": 63228.59108515226,
+      "ask": 63245.72255891555,
+      "reservation_price": 63237.1568220339,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 7.758914847749111,
+      "ask_distance_from_mid": 9.372558915543777,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63236.3,
+          "quantity": 1.036
+        },
+        {
+          "price": 63236.2,
+          "quantity": 0.001
+        },
+        {
+          "price": 63236.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63235.9,
+          "quantity": 0.002
+        },
+        {
+          "price": 63235.7,
+          "quantity": 0.15
+        },
+        {
+          "price": 63235.6,
+          "quantity": 0.001
+        },
+        {
+          "price": 63235.3,
+          "quantity": 0.003
+        },
+        {
+          "price": 63235.0,
+          "quantity": 0.004
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63236.4,
+          "quantity": 4.653
+        },
+        {
+          "price": 63236.5,
+          "quantity": 0.001
+        },
+        {
+          "price": 63236.7,
+          "quantity": 0.002
+        },
+        {
+          "price": 63236.8,
+          "quantity": 0.001
+        },
+        {
+          "price": 63236.9,
+          "quantity": 0.049
+        },
+        {
+          "price": 63237.0,
+          "quantity": 0.317
+        },
+        {
+          "price": 63237.1,
+          "quantity": 0.003
+        },
+        {
+          "price": 63237.3,
+          "quantity": 0.001
+        }
+      ],
+      "cash": 103162.29320168671,
+      "inventory": -0.05,
+      "fees_paid": 0.6325851573688165,
+      "equity": 100000.78570168672
+    },
+    {
+      "step": 32,
+      "mid_price": 63230.149999999994,
+      "market_spread": 0.09999999999854481,
+      "bid": 63222.391085152245,
+      "ask": 63239.52255891554,
+      "reservation_price": 63230.95682203389,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 7.758914847749111,
+      "ask_distance_from_mid": 9.372558915543777,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63230.1,
+          "quantity": 2.166
+        },
+        {
+          "price": 63230.0,
+          "quantity": 0.002
+        },
+        {
+          "price": 63229.8,
+          "quantity": 0.001
+        },
+        {
+          "price": 63229.7,
+          "quantity": 0.004
+        },
+        {
+          "price": 63229.6,
+          "quantity": 0.06
+        },
+        {
+          "price": 63229.5,
+          "quantity": 0.15
+        },
+        {
+          "price": 63229.2,
+          "quantity": 0.002
+        },
+        {
+          "price": 63229.1,
+          "quantity": 0.001
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63230.2,
+          "quantity": 7.32
+        },
+        {
+          "price": 63230.3,
+          "quantity": 0.003
+        },
+        {
+          "price": 63231.3,
+          "quantity": 0.002
+        },
+        {
+          "price": 63231.4,
+          "quantity": 0.001
+        },
+        {
+          "price": 63231.5,
+          "quantity": 0.001
+        },
+        {
+          "price": 63232.0,
+          "quantity": 0.033
+        },
+        {
+          "price": 63232.1,
+          "quantity": 0.005
+        },
+        {
+          "price": 63232.6,
+          "quantity": 0.034
+        }
+      ],
+      "cash": 103162.29320168671,
+      "inventory": -0.05,
+      "fees_paid": 0.6325851573688165,
+      "equity": 100000.78570168672
+    },
+    {
+      "step": 33,
+      "mid_price": 63230.149999999994,
+      "market_spread": 0.09999999999854481,
+      "bid": 63222.391085152245,
+      "ask": 63239.52255891554,
+      "reservation_price": 63230.95682203389,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 7.758914847749111,
+      "ask_distance_from_mid": 9.372558915543777,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63230.1,
+          "quantity": 1.82
+        },
+        {
+          "price": 63230.0,
+          "quantity": 0.002
+        },
+        {
+          "price": 63229.8,
+          "quantity": 0.001
+        },
+        {
+          "price": 63229.7,
+          "quantity": 0.004
+        },
+        {
+          "price": 63229.6,
+          "quantity": 0.06
+        },
+        {
+          "price": 63229.5,
+          "quantity": 0.152
+        },
+        {
+          "price": 63229.3,
+          "quantity": 0.003
+        },
+        {
+          "price": 63229.2,
+          "quantity": 0.001
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63230.2,
+          "quantity": 5.913
+        },
+        {
+          "price": 63230.3,
+          "quantity": 0.03
+        },
+        {
+          "price": 63230.4,
+          "quantity": 0.08
+        },
+        {
+          "price": 63231.2,
+          "quantity": 0.08
+        },
+        {
+          "price": 63231.4,
+          "quantity": 0.001
+        },
+        {
+          "price": 63231.5,
+          "quantity": 0.001
+        },
+        {
+          "price": 63232.0,
+          "quantity": 0.063
+        },
+        {
+          "price": 63232.1,
+          "quantity": 0.005
+        }
+      ],
+      "cash": 103162.29320168671,
+      "inventory": -0.05,
+      "fees_paid": 0.6325851573688165,
+      "equity": 100000.78570168672
+    },
+    {
+      "step": 34,
+      "mid_price": 63230.149999999994,
+      "market_spread": 0.09999999999854481,
+      "bid": 63222.391085152245,
+      "ask": 63239.52255891554,
+      "reservation_price": 63230.95682203389,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 7.758914847749111,
+      "ask_distance_from_mid": 9.372558915543777,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63230.1,
+          "quantity": 6.557
+        },
+        {
+          "price": 63230.0,
+          "quantity": 0.561
+        },
+        {
+          "price": 63229.8,
+          "quantity": 0.001
+        },
+        {
+          "price": 63229.7,
+          "quantity": 0.004
+        },
+        {
+          "price": 63229.6,
+          "quantity": 0.06
+        },
+        {
+          "price": 63229.5,
+          "quantity": 0.152
+        },
+        {
+          "price": 63229.3,
+          "quantity": 0.003
+        },
+        {
+          "price": 63229.2,
+          "quantity": 0.001
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63230.2,
+          "quantity": 0.963
+        },
+        {
+          "price": 63230.3,
+          "quantity": 0.005
+        },
+        {
+          "price": 63230.4,
+          "quantity": 0.083
+        },
+        {
+          "price": 63230.6,
+          "quantity": 0.003
+        },
+        {
+          "price": 63231.2,
+          "quantity": 0.08
+        },
+        {
+          "price": 63231.4,
+          "quantity": 0.001
+        },
+        {
+          "price": 63231.5,
+          "quantity": 0.001
+        },
+        {
+          "price": 63232.1,
+          "quantity": 0.001
+        }
+      ],
+      "cash": 103162.29320168671,
+      "inventory": -0.05,
+      "fees_paid": 0.6325851573688165,
+      "equity": 100000.78570168672
+    },
+    {
+      "step": 35,
+      "mid_price": 63230.149999999994,
+      "market_spread": 0.09999999999854481,
+      "bid": 63222.391085152245,
+      "ask": 63239.52255891554,
+      "reservation_price": 63230.95682203389,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 7.758914847749111,
+      "ask_distance_from_mid": 9.372558915543777,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63230.1,
+          "quantity": 6.693
+        },
+        {
+          "price": 63230.0,
+          "quantity": 0.561
+        },
+        {
+          "price": 63229.8,
+          "quantity": 0.001
+        },
+        {
+          "price": 63229.7,
+          "quantity": 0.004
+        },
+        {
+          "price": 63229.6,
+          "quantity": 0.06
+        },
+        {
+          "price": 63229.5,
+          "quantity": 0.152
+        },
+        {
+          "price": 63229.3,
+          "quantity": 0.003
+        },
+        {
+          "price": 63229.2,
+          "quantity": 0.001
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63230.2,
+          "quantity": 0.877
+        },
+        {
+          "price": 63230.3,
+          "quantity": 0.005
+        },
+        {
+          "price": 63230.4,
+          "quantity": 0.003
+        },
+        {
+          "price": 63230.6,
+          "quantity": 0.003
+        },
+        {
+          "price": 63231.4,
+          "quantity": 0.001
+        },
+        {
+          "price": 63231.5,
+          "quantity": 0.001
+        },
+        {
+          "price": 63232.1,
+          "quantity": 0.001
+        },
+        {
+          "price": 63232.6,
+          "quantity": 0.003
+        }
+      ],
+      "cash": 103162.29320168671,
+      "inventory": -0.05,
+      "fees_paid": 0.6325851573688165,
+      "equity": 100000.78570168672
+    },
+    {
+      "step": 36,
+      "mid_price": 63230.149999999994,
+      "market_spread": 0.09999999999854481,
+      "bid": 63222.391085152245,
+      "ask": 63239.52255891554,
+      "reservation_price": 63230.95682203389,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 7.758914847749111,
+      "ask_distance_from_mid": 9.372558915543777,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63230.1,
+          "quantity": 2.943
+        },
+        {
+          "price": 63230.0,
+          "quantity": 0.293
+        },
+        {
+          "price": 63229.8,
+          "quantity": 0.001
+        },
+        {
+          "price": 63229.7,
+          "quantity": 0.004
+        },
+        {
+          "price": 63229.6,
+          "quantity": 0.06
+        },
+        {
+          "price": 63229.5,
+          "quantity": 0.152
+        },
+        {
+          "price": 63229.4,
+          "quantity": 0.016
+        },
+        {
+          "price": 63229.3,
+          "quantity": 0.003
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63230.2,
+          "quantity": 1.603
+        },
+        {
+          "price": 63230.3,
+          "quantity": 0.006
+        },
+        {
+          "price": 63230.4,
+          "quantity": 0.003
+        },
+        {
+          "price": 63230.6,
+          "quantity": 0.004
+        },
+        {
+          "price": 63230.7,
+          "quantity": 0.002
+        },
+        {
+          "price": 63230.8,
+          "quantity": 0.002
+        },
+        {
+          "price": 63231.4,
+          "quantity": 0.001
+        },
+        {
+          "price": 63231.5,
+          "quantity": 0.003
+        }
+      ],
+      "cash": 103162.29320168671,
+      "inventory": -0.05,
+      "fees_paid": 0.6325851573688165,
+      "equity": 100000.78570168672
+    },
+    {
+      "step": 37,
+      "mid_price": 63230.149999999994,
+      "market_spread": 0.09999999999854481,
+      "bid": 63222.391085152245,
+      "ask": 63239.52255891554,
+      "reservation_price": 63230.95682203389,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 7.758914847749111,
+      "ask_distance_from_mid": 9.372558915543777,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63230.1,
+          "quantity": 2.891
+        },
+        {
+          "price": 63230.0,
+          "quantity": 0.293
+        },
+        {
+          "price": 63229.8,
+          "quantity": 0.001
+        },
+        {
+          "price": 63229.7,
+          "quantity": 0.004
+        },
+        {
+          "price": 63229.6,
+          "quantity": 0.06
+        },
+        {
+          "price": 63229.5,
+          "quantity": 0.152
+        },
+        {
+          "price": 63229.4,
+          "quantity": 0.017
+        },
+        {
+          "price": 63229.3,
+          "quantity": 0.004
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63230.2,
+          "quantity": 1.492
+        },
+        {
+          "price": 63230.3,
+          "quantity": 0.006
+        },
+        {
+          "price": 63230.4,
+          "quantity": 0.003
+        },
+        {
+          "price": 63230.6,
+          "quantity": 0.004
+        },
+        {
+          "price": 63230.7,
+          "quantity": 0.002
+        },
+        {
+          "price": 63230.8,
+          "quantity": 0.002
+        },
+        {
+          "price": 63231.4,
+          "quantity": 0.001
+        },
+        {
+          "price": 63231.5,
+          "quantity": 0.003
+        }
+      ],
+      "cash": 103162.29320168671,
+      "inventory": -0.05,
+      "fees_paid": 0.6325851573688165,
+      "equity": 100000.78570168672
+    },
+    {
+      "step": 38,
+      "mid_price": 63230.149999999994,
+      "market_spread": 0.09999999999854481,
+      "bid": 63222.391085152245,
+      "ask": 63239.52255891554,
+      "reservation_price": 63230.95682203389,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 7.758914847749111,
+      "ask_distance_from_mid": 9.372558915543777,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63230.1,
+          "quantity": 2.862
+        },
+        {
+          "price": 63230.0,
+          "quantity": 0.002
+        },
+        {
+          "price": 63229.8,
+          "quantity": 0.001
+        },
+        {
+          "price": 63229.7,
+          "quantity": 0.004
+        },
+        {
+          "price": 63229.6,
+          "quantity": 0.06
+        },
+        {
+          "price": 63229.5,
+          "quantity": 0.152
+        },
+        {
+          "price": 63229.4,
+          "quantity": 0.016
+        },
+        {
+          "price": 63229.3,
+          "quantity": 0.003
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63230.2,
+          "quantity": 2.836
+        },
+        {
+          "price": 63230.3,
+          "quantity": 0.006
+        },
+        {
+          "price": 63230.4,
+          "quantity": 0.003
+        },
+        {
+          "price": 63230.6,
+          "quantity": 0.004
+        },
+        {
+          "price": 63230.7,
+          "quantity": 0.002
+        },
+        {
+          "price": 63230.8,
+          "quantity": 0.002
+        },
+        {
+          "price": 63231.4,
+          "quantity": 0.001
+        },
+        {
+          "price": 63231.5,
+          "quantity": 0.003
+        }
+      ],
+      "cash": 103162.29320168671,
+      "inventory": -0.05,
+      "fees_paid": 0.6325851573688165,
+      "equity": 100000.78570168672
+    },
+    {
+      "step": 39,
+      "mid_price": 63230.149999999994,
+      "market_spread": 0.09999999999854481,
+      "bid": 63222.391085152245,
+      "ask": 63239.52255891554,
+      "reservation_price": 63230.95682203389,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 7.758914847749111,
+      "ask_distance_from_mid": 9.372558915543777,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63230.1,
+          "quantity": 1.927
+        },
+        {
+          "price": 63230.0,
+          "quantity": 0.002
+        },
+        {
+          "price": 63229.8,
+          "quantity": 0.001
+        },
+        {
+          "price": 63229.7,
+          "quantity": 0.004
+        },
+        {
+          "price": 63229.6,
+          "quantity": 0.06
+        },
+        {
+          "price": 63229.5,
+          "quantity": 0.152
+        },
+        {
+          "price": 63229.4,
+          "quantity": 0.016
+        },
+        {
+          "price": 63229.3,
+          "quantity": 0.003
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63230.2,
+          "quantity": 2.881
+        },
+        {
+          "price": 63230.3,
+          "quantity": 0.006
+        },
+        {
+          "price": 63230.4,
+          "quantity": 0.003
+        },
+        {
+          "price": 63230.6,
+          "quantity": 0.004
+        },
+        {
+          "price": 63230.7,
+          "quantity": 0.002
+        },
+        {
+          "price": 63230.8,
+          "quantity": 0.002
+        },
+        {
+          "price": 63231.4,
+          "quantity": 0.001
+        },
+        {
+          "price": 63231.5,
+          "quantity": 0.003
+        }
+      ],
+      "cash": 103162.29320168671,
+      "inventory": -0.05,
+      "fees_paid": 0.6325851573688165,
+      "equity": 100000.78570168672
+    },
+    {
+      "step": 40,
+      "mid_price": 63230.149999999994,
+      "market_spread": 0.09999999999854481,
+      "bid": 63222.391085152245,
+      "ask": 63239.52255891554,
+      "reservation_price": 63230.95682203389,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 7.758914847749111,
+      "ask_distance_from_mid": 9.372558915543777,
+      "fills": 1,
+      "buy_fills": 0,
+      "sell_fills": 1,
+      "fill_details": [
+        {
+          "side": "sell",
+          "price": 63239.52255891554,
+          "quantity": 0.05,
+          "notional": 3161.976127945777
+        }
+      ],
+      "book_bids": [
+        {
+          "price": 63230.1,
+          "quantity": 1.626
+        },
+        {
+          "price": 63230.0,
+          "quantity": 0.002
+        },
+        {
+          "price": 63229.8,
+          "quantity": 0.001
+        },
+        {
+          "price": 63229.7,
+          "quantity": 0.004
+        },
+        {
+          "price": 63229.6,
+          "quantity": 0.06
+        },
+        {
+          "price": 63229.5,
+          "quantity": 0.152
+        },
+        {
+          "price": 63229.4,
+          "quantity": 0.016
+        },
+        {
+          "price": 63229.3,
+          "quantity": 0.003
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63230.2,
+          "quantity": 3.454
+        },
+        {
+          "price": 63230.3,
+          "quantity": 0.006
+        },
+        {
+          "price": 63230.4,
+          "quantity": 0.003
+        },
+        {
+          "price": 63230.6,
+          "quantity": 0.004
+        },
+        {
+          "price": 63230.7,
+          "quantity": 0.002
+        },
+        {
+          "price": 63230.8,
+          "quantity": 0.002
+        },
+        {
+          "price": 63231.0,
+          "quantity": 0.048
+        },
+        {
+          "price": 63231.3,
+          "quantity": 0.002
+        }
+      ],
+      "cash": 106323.6369344069,
+      "inventory": -0.1,
+      "fees_paid": 1.264980382957972,
+      "equity": 99999.6419344069
+    },
+    {
+      "step": 41,
+      "mid_price": 63239.95,
+      "market_spread": 0.09999999999854481,
+      "bid": 63232.997907186145,
+      "ask": 63250.12938094944,
+      "reservation_price": 63241.56364406779,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 6.9520928138517775,
+      "ask_distance_from_mid": 10.17938094944111,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63239.9,
+          "quantity": 8.295
+        },
+        {
+          "price": 63239.8,
+          "quantity": 0.001
+        },
+        {
+          "price": 63239.7,
+          "quantity": 0.002
+        },
+        {
+          "price": 63239.6,
+          "quantity": 0.001
+        },
+        {
+          "price": 63239.3,
+          "quantity": 0.15
+        },
+        {
+          "price": 63239.1,
+          "quantity": 0.861
+        },
+        {
+          "price": 63239.0,
+          "quantity": 1.5
+        },
+        {
+          "price": 63238.9,
+          "quantity": 0.589
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63240.0,
+          "quantity": 0.284
+        },
+        {
+          "price": 63240.4,
+          "quantity": 0.001
+        },
+        {
+          "price": 63240.5,
+          "quantity": 0.002
+        },
+        {
+          "price": 63240.6,
+          "quantity": 0.005
+        },
+        {
+          "price": 63240.9,
+          "quantity": 0.001
+        },
+        {
+          "price": 63241.0,
+          "quantity": 0.003
+        },
+        {
+          "price": 63241.1,
+          "quantity": 0.001
+        },
+        {
+          "price": 63241.3,
+          "quantity": 0.001
+        }
+      ],
+      "cash": 106323.6369344069,
+      "inventory": -0.1,
+      "fees_paid": 1.264980382957972,
+      "equity": 99999.96193440689
+    },
+    {
+      "step": 42,
+      "mid_price": 63236.75,
+      "market_spread": 0.10000000000582077,
+      "bid": 63229.79790718615,
+      "ask": 63246.92938094944,
+      "reservation_price": 63238.363644067795,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 6.9520928138517775,
+      "ask_distance_from_mid": 10.17938094944111,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63236.7,
+          "quantity": 2.298
+        },
+        {
+          "price": 63236.6,
+          "quantity": 0.002
+        },
+        {
+          "price": 63236.5,
+          "quantity": 0.002
+        },
+        {
+          "price": 63236.2,
+          "quantity": 0.001
+        },
+        {
+          "price": 63236.1,
+          "quantity": 0.15
+        },
+        {
+          "price": 63236.0,
+          "quantity": 0.003
+        },
+        {
+          "price": 63235.5,
+          "quantity": 0.001
+        },
+        {
+          "price": 63235.4,
+          "quantity": 0.003
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63236.8,
+          "quantity": 7.463
+        },
+        {
+          "price": 63236.9,
+          "quantity": 0.011
+        },
+        {
+          "price": 63237.0,
+          "quantity": 0.002
+        },
+        {
+          "price": 63237.1,
+          "quantity": 0.001
+        },
+        {
+          "price": 63237.7,
+          "quantity": 0.001
+        },
+        {
+          "price": 63237.8,
+          "quantity": 0.317
+        },
+        {
+          "price": 63238.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63238.1,
+          "quantity": 0.001
+        }
+      ],
+      "cash": 106323.6369344069,
+      "inventory": -0.1,
+      "fees_paid": 1.264980382957972,
+      "equity": 99999.96193440689
+    },
+    {
+      "step": 43,
+      "mid_price": 63236.75,
+      "market_spread": 0.10000000000582077,
+      "bid": 63229.79790718615,
+      "ask": 63246.92938094944,
+      "reservation_price": 63238.363644067795,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 6.9520928138517775,
+      "ask_distance_from_mid": 10.17938094944111,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63236.7,
+          "quantity": 2.006
+        },
+        {
+          "price": 63236.6,
+          "quantity": 0.004
+        },
+        {
+          "price": 63236.5,
+          "quantity": 0.002
+        },
+        {
+          "price": 63236.3,
+          "quantity": 0.009
+        },
+        {
+          "price": 63236.2,
+          "quantity": 0.001
+        },
+        {
+          "price": 63236.1,
+          "quantity": 0.15
+        },
+        {
+          "price": 63236.0,
+          "quantity": 0.003
+        },
+        {
+          "price": 63235.9,
+          "quantity": 0.002
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63236.8,
+          "quantity": 6.87
+        },
+        {
+          "price": 63236.9,
+          "quantity": 0.003
+        },
+        {
+          "price": 63237.0,
+          "quantity": 0.002
+        },
+        {
+          "price": 63237.1,
+          "quantity": 0.003
+        },
+        {
+          "price": 63237.7,
+          "quantity": 0.001
+        },
+        {
+          "price": 63237.8,
+          "quantity": 0.317
+        },
+        {
+          "price": 63238.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63238.1,
+          "quantity": 0.001
+        }
+      ],
+      "cash": 106323.6369344069,
+      "inventory": -0.1,
+      "fees_paid": 1.264980382957972,
+      "equity": 99999.96193440689
+    },
+    {
+      "step": 44,
+      "mid_price": 63236.75,
+      "market_spread": 0.10000000000582077,
+      "bid": 63229.79790718615,
+      "ask": 63246.92938094944,
+      "reservation_price": 63238.363644067795,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 6.9520928138517775,
+      "ask_distance_from_mid": 10.17938094944111,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63236.7,
+          "quantity": 1.911
+        },
+        {
+          "price": 63236.6,
+          "quantity": 0.004
+        },
+        {
+          "price": 63236.5,
+          "quantity": 0.002
+        },
+        {
+          "price": 63236.3,
+          "quantity": 0.011
+        },
+        {
+          "price": 63236.2,
+          "quantity": 0.001
+        },
+        {
+          "price": 63236.1,
+          "quantity": 0.15
+        },
+        {
+          "price": 63236.0,
+          "quantity": 0.003
+        },
+        {
+          "price": 63235.9,
+          "quantity": 0.002
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63236.8,
+          "quantity": 6.292
+        },
+        {
+          "price": 63236.9,
+          "quantity": 0.005
+        },
+        {
+          "price": 63237.0,
+          "quantity": 0.002
+        },
+        {
+          "price": 63237.1,
+          "quantity": 0.003
+        },
+        {
+          "price": 63237.7,
+          "quantity": 0.002
+        },
+        {
+          "price": 63237.8,
+          "quantity": 0.319
+        },
+        {
+          "price": 63238.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63238.1,
+          "quantity": 0.001
+        }
+      ],
+      "cash": 106323.6369344069,
+      "inventory": -0.1,
+      "fees_paid": 1.264980382957972,
+      "equity": 99999.96193440689
+    },
+    {
+      "step": 45,
+      "mid_price": 63236.75,
+      "market_spread": 0.10000000000582077,
+      "bid": 63229.79790718615,
+      "ask": 63246.92938094944,
+      "reservation_price": 63238.363644067795,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 6.9520928138517775,
+      "ask_distance_from_mid": 10.17938094944111,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63236.7,
+          "quantity": 1.268
+        },
+        {
+          "price": 63236.6,
+          "quantity": 0.003
+        },
+        {
+          "price": 63236.5,
+          "quantity": 0.002
+        },
+        {
+          "price": 63236.3,
+          "quantity": 0.011
+        },
+        {
+          "price": 63236.2,
+          "quantity": 0.001
+        },
+        {
+          "price": 63236.1,
+          "quantity": 0.15
+        },
+        {
+          "price": 63236.0,
+          "quantity": 0.003
+        },
+        {
+          "price": 63235.9,
+          "quantity": 0.005
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63236.8,
+          "quantity": 6.256
+        },
+        {
+          "price": 63236.9,
+          "quantity": 0.005
+        },
+        {
+          "price": 63237.0,
+          "quantity": 0.002
+        },
+        {
+          "price": 63237.1,
+          "quantity": 0.003
+        },
+        {
+          "price": 63237.7,
+          "quantity": 0.001
+        },
+        {
+          "price": 63237.8,
+          "quantity": 0.319
+        },
+        {
+          "price": 63238.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63238.1,
+          "quantity": 0.001
+        }
+      ],
+      "cash": 106323.6369344069,
+      "inventory": -0.1,
+      "fees_paid": 1.264980382957972,
+      "equity": 100000.21193440689
+    },
+    {
+      "step": 46,
+      "mid_price": 63234.25,
+      "market_spread": 0.10000000000582077,
+      "bid": 63227.29790718615,
+      "ask": 63244.42938094944,
+      "reservation_price": 63235.863644067795,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 6.9520928138517775,
+      "ask_distance_from_mid": 10.17938094944111,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63234.2,
+          "quantity": 1.3
+        },
+        {
+          "price": 63234.1,
+          "quantity": 0.002
+        },
+        {
+          "price": 63234.0,
+          "quantity": 0.002
+        },
+        {
+          "price": 63233.8,
+          "quantity": 0.006
+        },
+        {
+          "price": 63233.7,
+          "quantity": 0.001
+        },
+        {
+          "price": 63233.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63232.4,
+          "quantity": 0.015
+        },
+        {
+          "price": 63232.3,
+          "quantity": 0.001
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63234.3,
+          "quantity": 3.464
+        },
+        {
+          "price": 63234.4,
+          "quantity": 0.001
+        },
+        {
+          "price": 63234.9,
+          "quantity": 0.001
+        },
+        {
+          "price": 63235.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63235.1,
+          "quantity": 0.095
+        },
+        {
+          "price": 63235.8,
+          "quantity": 0.001
+        },
+        {
+          "price": 63236.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63236.4,
+          "quantity": 0.001
+        }
+      ],
+      "cash": 106323.6369344069,
+      "inventory": -0.1,
+      "fees_paid": 1.264980382957972,
+      "equity": 100000.21193440689
+    },
+    {
+      "step": 47,
+      "mid_price": 63234.25,
+      "market_spread": 0.10000000000582077,
+      "bid": 63227.29790718615,
+      "ask": 63244.42938094944,
+      "reservation_price": 63235.863644067795,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 6.9520928138517775,
+      "ask_distance_from_mid": 10.17938094944111,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63234.2,
+          "quantity": 5.138
+        },
+        {
+          "price": 63234.1,
+          "quantity": 0.004
+        },
+        {
+          "price": 63234.0,
+          "quantity": 0.002
+        },
+        {
+          "price": 63233.9,
+          "quantity": 0.001
+        },
+        {
+          "price": 63233.8,
+          "quantity": 0.007
+        },
+        {
+          "price": 63233.7,
+          "quantity": 0.072
+        },
+        {
+          "price": 63233.6,
+          "quantity": 0.15
+        },
+        {
+          "price": 63233.5,
+          "quantity": 0.006
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63234.3,
+          "quantity": 0.705
+        },
+        {
+          "price": 63234.9,
+          "quantity": 0.001
+        },
+        {
+          "price": 63235.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63236.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63236.4,
+          "quantity": 0.001
+        },
+        {
+          "price": 63236.9,
+          "quantity": 0.002
+        },
+        {
+          "price": 63237.6,
+          "quantity": 0.001
+        },
+        {
+          "price": 63237.7,
+          "quantity": 0.001
+        }
+      ],
+      "cash": 106323.6369344069,
+      "inventory": -0.1,
+      "fees_paid": 1.264980382957972,
+      "equity": 100000.21193440689
+    },
+    {
+      "step": 48,
+      "mid_price": 63234.25,
+      "market_spread": 0.10000000000582077,
+      "bid": 63227.29790718615,
+      "ask": 63244.42938094944,
+      "reservation_price": 63235.863644067795,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 6.9520928138517775,
+      "ask_distance_from_mid": 10.17938094944111,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63234.2,
+          "quantity": 7.647
+        },
+        {
+          "price": 63234.1,
+          "quantity": 0.005
+        },
+        {
+          "price": 63234.0,
+          "quantity": 0.121
+        },
+        {
+          "price": 63233.9,
+          "quantity": 0.001
+        },
+        {
+          "price": 63233.8,
+          "quantity": 0.007
+        },
+        {
+          "price": 63233.7,
+          "quantity": 0.024
+        },
+        {
+          "price": 63233.6,
+          "quantity": 0.151
+        },
+        {
+          "price": 63233.5,
+          "quantity": 0.007
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63234.3,
+          "quantity": 2.191
+        },
+        {
+          "price": 63234.4,
+          "quantity": 0.002
+        },
+        {
+          "price": 63234.5,
+          "quantity": 0.002
+        },
+        {
+          "price": 63234.6,
+          "quantity": 0.002
+        },
+        {
+          "price": 63235.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63235.3,
+          "quantity": 0.001
+        },
+        {
+          "price": 63236.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63236.4,
+          "quantity": 0.001
+        }
+      ],
+      "cash": 106323.6369344069,
+      "inventory": -0.1,
+      "fees_paid": 1.264980382957972,
+      "equity": 100000.21193440689
+    },
+    {
+      "step": 49,
+      "mid_price": 63234.25,
+      "market_spread": 0.10000000000582077,
+      "bid": 63227.29790718615,
+      "ask": 63244.42938094944,
+      "reservation_price": 63235.863644067795,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 6.9520928138517775,
+      "ask_distance_from_mid": 10.17938094944111,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63234.2,
+          "quantity": 5.976
+        },
+        {
+          "price": 63234.1,
+          "quantity": 0.051
+        },
+        {
+          "price": 63234.0,
+          "quantity": 0.121
+        },
+        {
+          "price": 63233.9,
+          "quantity": 0.001
+        },
+        {
+          "price": 63233.8,
+          "quantity": 0.007
+        },
+        {
+          "price": 63233.7,
+          "quantity": 0.001
+        },
+        {
+          "price": 63233.6,
+          "quantity": 0.15
+        },
+        {
+          "price": 63233.5,
+          "quantity": 0.006
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63234.3,
+          "quantity": 2.212
+        },
+        {
+          "price": 63234.4,
+          "quantity": 0.002
+        },
+        {
+          "price": 63234.5,
+          "quantity": 0.005
+        },
+        {
+          "price": 63234.6,
+          "quantity": 0.005
+        },
+        {
+          "price": 63234.7,
+          "quantity": 0.003
+        },
+        {
+          "price": 63235.0,
+          "quantity": 0.004
+        },
+        {
+          "price": 63235.2,
+          "quantity": 0.002
+        },
+        {
+          "price": 63235.3,
+          "quantity": 0.001
+        }
+      ],
+      "cash": 106323.6369344069,
+      "inventory": -0.1,
+      "fees_paid": 1.264980382957972,
+      "equity": 100000.21193440689
+    },
+    {
+      "step": 50,
+      "mid_price": 63234.25,
+      "market_spread": 0.10000000000582077,
+      "bid": 63227.29790718615,
+      "ask": 63244.42938094944,
+      "reservation_price": 63235.863644067795,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 6.9520928138517775,
+      "ask_distance_from_mid": 10.17938094944111,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63234.2,
+          "quantity": 4.672
+        },
+        {
+          "price": 63234.1,
+          "quantity": 0.05
+        },
+        {
+          "price": 63234.0,
+          "quantity": 0.121
+        },
+        {
+          "price": 63233.8,
+          "quantity": 0.007
+        },
+        {
+          "price": 63233.7,
+          "quantity": 0.001
+        },
+        {
+          "price": 63233.6,
+          "quantity": 0.15
+        },
+        {
+          "price": 63233.5,
+          "quantity": 0.002
+        },
+        {
+          "price": 63233.4,
+          "quantity": 0.024
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63234.3,
+          "quantity": 3.065
+        },
+        {
+          "price": 63234.4,
+          "quantity": 0.002
+        },
+        {
+          "price": 63234.5,
+          "quantity": 0.005
+        },
+        {
+          "price": 63234.6,
+          "quantity": 0.005
+        },
+        {
+          "price": 63234.7,
+          "quantity": 0.003
+        },
+        {
+          "price": 63235.0,
+          "quantity": 0.004
+        },
+        {
+          "price": 63235.2,
+          "quantity": 0.003
+        },
+        {
+          "price": 63235.3,
+          "quantity": 0.001
+        }
+      ],
+      "cash": 106323.6369344069,
+      "inventory": -0.1,
+      "fees_paid": 1.264980382957972,
+      "equity": 100000.21193440689
+    },
+    {
+      "step": 51,
+      "mid_price": 63234.25,
+      "market_spread": 0.10000000000582077,
+      "bid": 63227.29790718615,
+      "ask": 63244.42938094944,
+      "reservation_price": 63235.863644067795,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 6.9520928138517775,
+      "ask_distance_from_mid": 10.17938094944111,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63234.2,
+          "quantity": 4.935
+        },
+        {
+          "price": 63234.1,
+          "quantity": 0.05
+        },
+        {
+          "price": 63234.0,
+          "quantity": 0.121
+        },
+        {
+          "price": 63233.8,
+          "quantity": 0.007
+        },
+        {
+          "price": 63233.7,
+          "quantity": 0.001
+        },
+        {
+          "price": 63233.6,
+          "quantity": 0.15
+        },
+        {
+          "price": 63233.5,
+          "quantity": 0.002
+        },
+        {
+          "price": 63233.3,
+          "quantity": 0.002
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63234.3,
+          "quantity": 2.912
+        },
+        {
+          "price": 63234.4,
+          "quantity": 0.003
+        },
+        {
+          "price": 63234.5,
+          "quantity": 0.025
+        },
+        {
+          "price": 63234.6,
+          "quantity": 0.005
+        },
+        {
+          "price": 63234.7,
+          "quantity": 0.003
+        },
+        {
+          "price": 63235.0,
+          "quantity": 0.004
+        },
+        {
+          "price": 63235.2,
+          "quantity": 0.002
+        },
+        {
+          "price": 63235.3,
+          "quantity": 0.001
+        }
+      ],
+      "cash": 106323.6369344069,
+      "inventory": -0.1,
+      "fees_paid": 1.264980382957972,
+      "equity": 100000.21193440689
+    },
+    {
+      "step": 52,
+      "mid_price": 63234.25,
+      "market_spread": 0.10000000000582077,
+      "bid": 63227.29790718615,
+      "ask": 63244.42938094944,
+      "reservation_price": 63235.863644067795,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 6.9520928138517775,
+      "ask_distance_from_mid": 10.17938094944111,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63234.2,
+          "quantity": 4.832
+        },
+        {
+          "price": 63234.1,
+          "quantity": 0.05
+        },
+        {
+          "price": 63234.0,
+          "quantity": 0.121
+        },
+        {
+          "price": 63233.8,
+          "quantity": 0.007
+        },
+        {
+          "price": 63233.7,
+          "quantity": 0.001
+        },
+        {
+          "price": 63233.6,
+          "quantity": 0.15
+        },
+        {
+          "price": 63233.5,
+          "quantity": 0.002
+        },
+        {
+          "price": 63233.3,
+          "quantity": 0.002
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63234.3,
+          "quantity": 2.599
+        },
+        {
+          "price": 63234.4,
+          "quantity": 0.003
+        },
+        {
+          "price": 63234.5,
+          "quantity": 0.025
+        },
+        {
+          "price": 63234.6,
+          "quantity": 0.005
+        },
+        {
+          "price": 63234.7,
+          "quantity": 0.003
+        },
+        {
+          "price": 63235.0,
+          "quantity": 0.004
+        },
+        {
+          "price": 63235.2,
+          "quantity": 0.003
+        },
+        {
+          "price": 63235.3,
+          "quantity": 0.001
+        }
+      ],
+      "cash": 106323.6369344069,
+      "inventory": -0.1,
+      "fees_paid": 1.264980382957972,
+      "equity": 100000.21193440689
+    },
+    {
+      "step": 53,
+      "mid_price": 63234.25,
+      "market_spread": 0.10000000000582077,
+      "bid": 63227.29790718615,
+      "ask": 63244.42938094944,
+      "reservation_price": 63235.863644067795,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 6.9520928138517775,
+      "ask_distance_from_mid": 10.17938094944111,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63234.2,
+          "quantity": 4.628
+        },
+        {
+          "price": 63234.1,
+          "quantity": 0.05
+        },
+        {
+          "price": 63234.0,
+          "quantity": 0.121
+        },
+        {
+          "price": 63233.8,
+          "quantity": 0.007
+        },
+        {
+          "price": 63233.7,
+          "quantity": 0.001
+        },
+        {
+          "price": 63233.6,
+          "quantity": 0.15
+        },
+        {
+          "price": 63233.5,
+          "quantity": 0.002
+        },
+        {
+          "price": 63233.4,
+          "quantity": 0.004
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63234.3,
+          "quantity": 2.611
+        },
+        {
+          "price": 63234.4,
+          "quantity": 0.003
+        },
+        {
+          "price": 63234.5,
+          "quantity": 0.025
+        },
+        {
+          "price": 63234.6,
+          "quantity": 0.005
+        },
+        {
+          "price": 63234.7,
+          "quantity": 0.003
+        },
+        {
+          "price": 63234.9,
+          "quantity": 0.001
+        },
+        {
+          "price": 63235.0,
+          "quantity": 0.004
+        },
+        {
+          "price": 63235.1,
+          "quantity": 0.001
+        }
+      ],
+      "cash": 106323.6369344069,
+      "inventory": -0.1,
+      "fees_paid": 1.264980382957972,
+      "equity": 100000.6219344069
+    },
+    {
+      "step": 54,
+      "mid_price": 63230.149999999994,
+      "market_spread": 0.09999999999854481,
+      "bid": 63223.19790718614,
+      "ask": 63240.329380949435,
+      "reservation_price": 63231.76364406779,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 6.9520928138517775,
+      "ask_distance_from_mid": 10.17938094944111,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63230.1,
+          "quantity": 0.23
+        },
+        {
+          "price": 63230.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63229.6,
+          "quantity": 0.001
+        },
+        {
+          "price": 63229.5,
+          "quantity": 0.194
+        },
+        {
+          "price": 63229.2,
+          "quantity": 0.001
+        },
+        {
+          "price": 63229.1,
+          "quantity": 0.003
+        },
+        {
+          "price": 63229.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63228.9,
+          "quantity": 0.002
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63230.2,
+          "quantity": 13.219
+        },
+        {
+          "price": 63230.3,
+          "quantity": 0.562
+        },
+        {
+          "price": 63230.6,
+          "quantity": 0.002
+        },
+        {
+          "price": 63230.7,
+          "quantity": 0.002
+        },
+        {
+          "price": 63230.8,
+          "quantity": 0.704
+        },
+        {
+          "price": 63230.9,
+          "quantity": 0.459
+        },
+        {
+          "price": 63231.0,
+          "quantity": 1.5
+        },
+        {
+          "price": 63231.1,
+          "quantity": 0.007
+        }
+      ],
+      "cash": 106323.6369344069,
+      "inventory": -0.1,
+      "fees_paid": 1.264980382957972,
+      "equity": 100000.21193440689
+    },
+    {
+      "step": 55,
+      "mid_price": 63234.25,
+      "market_spread": 0.10000000000582077,
+      "bid": 63227.29790718615,
+      "ask": 63244.42938094944,
+      "reservation_price": 63235.863644067795,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 6.9520928138517775,
+      "ask_distance_from_mid": 10.17938094944111,
+      "fills": 1,
+      "buy_fills": 1,
+      "sell_fills": 0,
+      "fill_details": [
+        {
+          "side": "buy",
+          "price": 63227.29790718615,
+          "quantity": 0.05,
+          "notional": 3161.3648953593074
+        }
+      ],
+      "book_bids": [
+        {
+          "price": 63234.2,
+          "quantity": 10.863
+        },
+        {
+          "price": 63234.1,
+          "quantity": 0.002
+        },
+        {
+          "price": 63234.0,
+          "quantity": 0.003
+        },
+        {
+          "price": 63233.9,
+          "quantity": 0.001
+        },
+        {
+          "price": 63233.8,
+          "quantity": 0.002
+        },
+        {
+          "price": 63233.6,
+          "quantity": 0.15
+        },
+        {
+          "price": 63233.5,
+          "quantity": 0.001
+        },
+        {
+          "price": 63233.2,
+          "quantity": 0.078
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63234.3,
+          "quantity": 0.204
+        },
+        {
+          "price": 63234.4,
+          "quantity": 0.004
+        },
+        {
+          "price": 63234.5,
+          "quantity": 0.022
+        },
+        {
+          "price": 63234.6,
+          "quantity": 0.002
+        },
+        {
+          "price": 63235.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63235.2,
+          "quantity": 0.003
+        },
+        {
+          "price": 63235.3,
+          "quantity": 0.001
+        },
+        {
+          "price": 63235.9,
+          "quantity": 0.007
+        }
+      ],
+      "cash": 103161.63976606852,
+      "inventory": -0.05,
+      "fees_paid": 1.8972533620298335,
+      "equity": 100000.40226606852
+    },
+    {
+      "step": 56,
+      "mid_price": 63224.75,
+      "market_spread": 0.10000000000582077,
+      "bid": 63216.99108515225,
+      "ask": 63234.122558915544,
+      "reservation_price": 63225.5568220339,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 7.758914847749111,
+      "ask_distance_from_mid": 9.372558915543777,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63224.7,
+          "quantity": 2.672
+        },
+        {
+          "price": 63224.6,
+          "quantity": 0.002
+        },
+        {
+          "price": 63224.5,
+          "quantity": 0.003
+        },
+        {
+          "price": 63224.2,
+          "quantity": 0.024
+        },
+        {
+          "price": 63224.1,
+          "quantity": 0.15
+        },
+        {
+          "price": 63224.0,
+          "quantity": 0.002
+        },
+        {
+          "price": 63223.8,
+          "quantity": 0.001
+        },
+        {
+          "price": 63223.3,
+          "quantity": 0.003
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63224.8,
+          "quantity": 6.472
+        },
+        {
+          "price": 63224.9,
+          "quantity": 0.003
+        },
+        {
+          "price": 63225.0,
+          "quantity": 0.003
+        },
+        {
+          "price": 63225.6,
+          "quantity": 0.006
+        },
+        {
+          "price": 63226.1,
+          "quantity": 0.001
+        },
+        {
+          "price": 63226.3,
+          "quantity": 0.002
+        },
+        {
+          "price": 63226.9,
+          "quantity": 0.771
+        },
+        {
+          "price": 63227.0,
+          "quantity": 1.72
+        }
+      ],
+      "cash": 103161.63976606852,
+      "inventory": -0.05,
+      "fees_paid": 1.8972533620298335,
+      "equity": 100000.40226606852
+    },
+    {
+      "step": 57,
+      "mid_price": 63224.75,
+      "market_spread": 0.10000000000582077,
+      "bid": 63216.99108515225,
+      "ask": 63234.122558915544,
+      "reservation_price": 63225.5568220339,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 7.758914847749111,
+      "ask_distance_from_mid": 9.372558915543777,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63224.7,
+          "quantity": 2.356
+        },
+        {
+          "price": 63224.6,
+          "quantity": 0.003
+        },
+        {
+          "price": 63224.5,
+          "quantity": 0.003
+        },
+        {
+          "price": 63224.2,
+          "quantity": 0.025
+        },
+        {
+          "price": 63224.1,
+          "quantity": 0.15
+        },
+        {
+          "price": 63224.0,
+          "quantity": 0.002
+        },
+        {
+          "price": 63223.9,
+          "quantity": 0.002
+        },
+        {
+          "price": 63223.8,
+          "quantity": 0.001
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63224.8,
+          "quantity": 6.577
+        },
+        {
+          "price": 63224.9,
+          "quantity": 0.003
+        },
+        {
+          "price": 63225.0,
+          "quantity": 0.003
+        },
+        {
+          "price": 63225.6,
+          "quantity": 0.086
+        },
+        {
+          "price": 63225.8,
+          "quantity": 0.002
+        },
+        {
+          "price": 63226.1,
+          "quantity": 0.001
+        },
+        {
+          "price": 63226.3,
+          "quantity": 0.002
+        },
+        {
+          "price": 63226.8,
+          "quantity": 0.001
+        }
+      ],
+      "cash": 103161.63976606852,
+      "inventory": -0.05,
+      "fees_paid": 1.8972533620298335,
+      "equity": 100000.36226606852
+    },
+    {
+      "step": 58,
+      "mid_price": 63225.55,
+      "market_spread": 0.09999999999854481,
+      "bid": 63217.791085152254,
+      "ask": 63234.92255891555,
+      "reservation_price": 63226.3568220339,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 7.758914847749111,
+      "ask_distance_from_mid": 9.372558915543777,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63225.5,
+          "quantity": 4.396
+        },
+        {
+          "price": 63225.4,
+          "quantity": 0.001
+        },
+        {
+          "price": 63225.2,
+          "quantity": 0.001
+        },
+        {
+          "price": 63225.1,
+          "quantity": 0.002
+        },
+        {
+          "price": 63224.9,
+          "quantity": 0.39
+        },
+        {
+          "price": 63224.8,
+          "quantity": 1.5
+        },
+        {
+          "price": 63224.7,
+          "quantity": 0.064
+        },
+        {
+          "price": 63224.6,
+          "quantity": 0.008
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63225.6,
+          "quantity": 3.137
+        },
+        {
+          "price": 63225.7,
+          "quantity": 0.003
+        },
+        {
+          "price": 63226.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63226.1,
+          "quantity": 0.004
+        },
+        {
+          "price": 63226.3,
+          "quantity": 0.002
+        },
+        {
+          "price": 63226.4,
+          "quantity": 0.082
+        },
+        {
+          "price": 63227.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63227.1,
+          "quantity": 0.002
+        }
+      ],
+      "cash": 103161.63976606852,
+      "inventory": -0.05,
+      "fees_paid": 1.8972533620298335,
+      "equity": 100000.36226606852
+    },
+    {
+      "step": 59,
+      "mid_price": 63225.55,
+      "market_spread": 0.09999999999854481,
+      "bid": 63217.791085152254,
+      "ask": 63234.92255891555,
+      "reservation_price": 63226.3568220339,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 7.758914847749111,
+      "ask_distance_from_mid": 9.372558915543777,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63225.5,
+          "quantity": 0.818
+        },
+        {
+          "price": 63225.2,
+          "quantity": 0.001
+        },
+        {
+          "price": 63225.1,
+          "quantity": 0.002
+        },
+        {
+          "price": 63224.9,
+          "quantity": 0.15
+        },
+        {
+          "price": 63224.7,
+          "quantity": 0.016
+        },
+        {
+          "price": 63224.6,
+          "quantity": 0.001
+        },
+        {
+          "price": 63224.5,
+          "quantity": 0.003
+        },
+        {
+          "price": 63224.0,
+          "quantity": 0.01
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63225.6,
+          "quantity": 4.053
+        },
+        {
+          "price": 63225.7,
+          "quantity": 0.003
+        },
+        {
+          "price": 63226.0,
+          "quantity": 0.001
+        },
+        {
+          "price": 63226.1,
+          "quantity": 0.004
+        },
+        {
+          "price": 63226.3,
+          "quantity": 0.002
+        },
+        {
+          "price": 63226.4,
+          "quantity": 0.082
+        },
+        {
+          "price": 63226.9,
+          "quantity": 0.002
+        },
+        {
+          "price": 63227.0,
+          "quantity": 0.002
+        }
+      ],
+      "cash": 103161.63976606852,
+      "inventory": -0.05,
+      "fees_paid": 1.8972533620298335,
+      "equity": 100000.52726606852
+    },
+    {
+      "step": 60,
+      "mid_price": 63222.25,
+      "market_spread": 0.10000000000582077,
+      "bid": 63214.49108515225,
+      "ask": 63231.622558915544,
+      "reservation_price": 63223.0568220339,
+      "spread": 17.13147376329025,
+      "bid_distance_from_mid": 7.758914847749111,
+      "ask_distance_from_mid": 9.372558915543777,
+      "fills": 0,
+      "buy_fills": 0,
+      "sell_fills": 0,
+      "fill_details": [],
+      "book_bids": [
+        {
+          "price": 63222.2,
+          "quantity": 0.018
+        },
+        {
+          "price": 63222.1,
+          "quantity": 0.008
+        },
+        {
+          "price": 63222.0,
+          "quantity": 0.005
+        },
+        {
+          "price": 63221.7,
+          "quantity": 0.001
+        },
+        {
+          "price": 63221.5,
+          "quantity": 0.194
+        },
+        {
+          "price": 63221.4,
+          "quantity": 0.002
+        },
+        {
+          "price": 63221.3,
+          "quantity": 0.002
+        },
+        {
+          "price": 63220.8,
+          "quantity": 0.001
+        }
+      ],
+      "book_asks": [
+        {
+          "price": 63222.3,
+          "quantity": 9.83
+        },
+        {
+          "price": 63222.4,
+          "quantity": 0.003
+        },
+        {
+          "price": 63222.5,
+          "quantity": 0.136
+        },
+        {
+          "price": 63222.6,
+          "quantity": 0.344
+        },
+        {
+          "price": 63222.7,
+          "quantity": 1.298
+        },
+        {
+          "price": 63222.8,
+          "quantity": 1.5
+        },
+        {
+          "price": 63222.9,
+          "quantity": 0.291
+        },
+        {
+          "price": 63223.0,
+          "quantity": 0.001
+        }
+      ],
+      "cash": 103161.63976606852,
+      "inventory": -0.05,
+      "fees_paid": 1.8972533620298335,
+      "equity": 100000.52726606852
     }
   ]
 }

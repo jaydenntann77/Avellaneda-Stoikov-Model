@@ -88,3 +88,29 @@ def simulate_touch_fills(
         fills.append(Fill(side="sell", price=quote.ask, quantity=quantity))
 
     return tuple(fills)
+
+
+def simulate_next_snapshot_fills(
+    quote: Quote,
+    next_snapshot: OrderBookSnapshot,
+    quantity: float,
+) -> tuple[Fill, ...]:
+    """Return fills when the next book snapshot moves through our quotes.
+
+    This is a simple passive-fill approximation. A bid fills if the next best
+    ask is at or below our bid. An ask fills if the next best bid is at or above
+    our ask.
+    """
+
+    if quantity <= 0:
+        raise ValueError("quantity must be positive.")
+
+    fills: list[Fill] = []
+
+    if next_snapshot.best_ask <= quote.bid:
+        fills.append(Fill(side="buy", price=quote.bid, quantity=quantity))
+
+    if next_snapshot.best_bid >= quote.ask:
+        fills.append(Fill(side="sell", price=quote.ask, quantity=quantity))
+
+    return tuple(fills)

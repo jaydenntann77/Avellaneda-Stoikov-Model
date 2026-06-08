@@ -32,6 +32,10 @@ def test_backtest_step_generates_quote_and_marks_unchanged_portfolio() -> None:
     assert result.fills == ()
     assert result.portfolio == portfolio
     assert result.equity == pytest.approx(0.0)
+    assert result.mid_price == pytest.approx(100.0)
+    assert result.market_spread == pytest.approx(2.0)
+    assert result.book_bids == ((99.0, 1.0),)
+    assert result.book_asks == ((101.0, 1.0),)
     assert result.quote.reservation_price == pytest.approx(snapshot.mid_price)
 
 
@@ -144,6 +148,30 @@ def test_backtest_runs_snapshots_in_sequence() -> None:
     assert results[1].quote.reservation_price == pytest.approx(102.8)
 
 
+def test_backtest_can_use_next_snapshot_fill_model() -> None:
+    snapshots = [
+        OrderBookSnapshot.from_levels(bids=[(99.0, 1.0)], asks=[(101.0, 1.0)]),
+        OrderBookSnapshot.from_levels(bids=[(101.5, 1.0)], asks=[(102.0, 1.0)]),
+    ]
+    params = ModelParameters(gamma=0.1, sigma=0.0, horizon=0.0, k=100.0)
+
+    results = run_backtest(
+        snapshots=snapshots,
+        initial_portfolio=PortfolioState(),
+        params=params,
+        quote_quantity=1.0,
+        fill_model="next_snapshot",
+    )
+
+    assert len(results) == 2
+    assert len(results[0].fills) == 1
+    assert results[0].fills[0].side == "sell"
+    assert results[0].fills[0].price == pytest.approx(results[0].quote.ask)
+    assert results[0].portfolio.inventory == pytest.approx(-1.0)
+    assert results[1].fills == ()
+    assert results[1].portfolio.inventory == pytest.approx(-1.0)
+
+
 def test_backtest_rejects_empty_snapshot_sequence() -> None:
     with pytest.raises(ValueError, match="at least one snapshot is required"):
         run_backtest(
@@ -202,18 +230,30 @@ def test_backtest_summary_reports_basic_metrics() -> None:
     quote = Quote(bid=99.0, ask=101.0, reservation_price=100.0, spread=2.0)
     results = (
         BacktestStepResult(
+            mid_price=100.0,
+            market_spread=2.0,
+            book_bids=((99.0, 1.0),),
+            book_asks=((101.0, 1.0),),
             quote=quote,
             fills=(Fill(side="buy", price=99.0, quantity=1.0),),
             portfolio=PortfolioState(inventory=1.0, fees_paid=0.1),
             equity=0.0,
         ),
         BacktestStepResult(
+            mid_price=100.0,
+            market_spread=2.0,
+            book_bids=((99.0, 1.0),),
+            book_asks=((101.0, 1.0),),
             quote=quote,
             fills=(Fill(side="sell", price=101.0, quantity=1.0),),
             portfolio=PortfolioState(inventory=-3.0, fees_paid=0.2),
             equity=5.0,
         ),
         BacktestStepResult(
+            mid_price=101.0,
+            market_spread=2.0,
+            book_bids=((100.0, 1.0),),
+            book_asks=((102.0, 1.0),),
             quote=quote,
             fills=(Fill(side="sell", price=102.0, quantity=2.0),),
             portfolio=PortfolioState(inventory=2.0, fees_paid=0.3),
@@ -270,7 +310,7 @@ def test_backtest_step_rejects_invalid_execution_settings() -> None:
             max_absolute_inventory=0.0,
         )
 
-    with pytest.raises(ValueError, match='fill_model must be either "marketable" or "touch"'):
+    with pytest.raises(ValueError, match='fill_model must be "marketable", "touch", or "next_snapshot"'):
         run_backtest_step(
             snapshot=snapshot,
             portfolio=PortfolioState(),

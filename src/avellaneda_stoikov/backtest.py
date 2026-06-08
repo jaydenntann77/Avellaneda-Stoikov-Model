@@ -15,19 +15,28 @@ from avellaneda_stoikov.binance import (
     load_binance_depth_messages_jsonl,
     reconstruct_snapshots_from_binance_messages,
 )
-from avellaneda_stoikov.execution import Fill, simulate_marketable_fills, simulate_touch_fills
+from avellaneda_stoikov.execution import (
+    Fill,
+    simulate_marketable_fills,
+    simulate_next_snapshot_fills,
+    simulate_touch_fills,
+)
 from avellaneda_stoikov.model import ModelParameters, Quote, generate_quote
 from avellaneda_stoikov.order_book import OrderBookSnapshot
 from avellaneda_stoikov.portfolio import PortfolioState, apply_fill_event, mark_to_market
 
 
-FillModel = Literal["marketable", "touch"]
+FillModel = Literal["marketable", "touch", "next_snapshot"]
 
 
 @dataclass(frozen=True)
 class BacktestStepResult:
     """Result of applying the strategy to one order book snapshot."""
 
+    mid_price: float
+    market_spread: float
+    book_bids: tuple[tuple[float, float], ...]
+    book_asks: tuple[tuple[float, float], ...]
     quote: Quote
     fills: tuple[Fill, ...]
     portfolio: PortfolioState
@@ -105,6 +114,10 @@ def run_backtest_step(
 
     equity = mark_to_market(next_portfolio, mid_price=snapshot.mid_price)
     return BacktestStepResult(
+        mid_price=snapshot.mid_price,
+        market_spread=snapshot.spread,
+        book_bids=_top_book_levels(snapshot.bids),
+        book_asks=_top_book_levels(snapshot.asks),
         quote=quote,
         fills=tuple(accepted_fills),
         portfolio=next_portfolio,
@@ -125,20 +138,33 @@ def run_backtest(
 
     if not snapshots:
         raise ValueError("at least one snapshot is required.")
+    _validate_fill_model(fill_model)
 
     results: list[BacktestStepResult] = []
     portfolio = initial_portfolio
 
-    for snapshot in snapshots:
-        result = run_backtest_step(
-            snapshot=snapshot,
-            portfolio=portfolio,
-            params=params,
-            quote_quantity=quote_quantity,
-            fee_rate=fee_rate,
-            max_absolute_inventory=max_absolute_inventory,
-            fill_model=fill_model,
-        )
+    for index, snapshot in enumerate(snapshots):
+        if fill_model == "next_snapshot":
+            next_snapshot = snapshots[index + 1] if index + 1 < len(snapshots) else None
+            result = _run_next_snapshot_backtest_step(
+                snapshot=snapshot,
+                next_snapshot=next_snapshot,
+                portfolio=portfolio,
+                params=params,
+                quote_quantity=quote_quantity,
+                fee_rate=fee_rate,
+                max_absolute_inventory=max_absolute_inventory,
+            )
+        else:
+            result = run_backtest_step(
+                snapshot=snapshot,
+                portfolio=portfolio,
+                params=params,
+                quote_quantity=quote_quantity,
+                fee_rate=fee_rate,
+                max_absolute_inventory=max_absolute_inventory,
+                fill_model=fill_model,
+            )
         results.append(result)
         portfolio = result.portfolio
 
@@ -233,6 +259,67 @@ def _fill_respects_inventory_limit(
     return abs(next_inventory) <= max_absolute_inventory
 
 
+def _run_next_snapshot_backtest_step(
+    snapshot: OrderBookSnapshot,
+    next_snapshot: OrderBookSnapshot | None,
+    portfolio: PortfolioState,
+    params: ModelParameters,
+    quote_quantity: float,
+    fee_rate: float,
+    max_absolute_inventory: float | None,
+) -> BacktestStepResult:
+    if quote_quantity <= 0:
+        raise ValueError("quote_quantity must be positive.")
+    if fee_rate < 0:
+        raise ValueError("fee_rate cannot be negative.")
+    if max_absolute_inventory is not None and max_absolute_inventory <= 0:
+        raise ValueError("max_absolute_inventory must be positive.")
+
+    quote = generate_quote(
+        mid_price=snapshot.mid_price,
+        inventory=portfolio.inventory,
+        params=params,
+    )
+    fills = (
+        simulate_next_snapshot_fills(
+            quote=quote,
+            next_snapshot=next_snapshot,
+            quantity=quote_quantity,
+        )
+        if next_snapshot is not None
+        else ()
+    )
+
+    next_portfolio = portfolio
+    accepted_fills: list[Fill] = []
+    for fill in fills:
+        if not _fill_respects_inventory_limit(
+            portfolio=next_portfolio,
+            fill=fill,
+            max_absolute_inventory=max_absolute_inventory,
+        ):
+            continue
+        next_portfolio = apply_fill_event(
+            state=next_portfolio,
+            fill=fill,
+            fee_rate=fee_rate,
+        )
+        accepted_fills.append(fill)
+
+    mark_snapshot = next_snapshot or snapshot
+    equity = mark_to_market(next_portfolio, mid_price=mark_snapshot.mid_price)
+    return BacktestStepResult(
+        mid_price=snapshot.mid_price,
+        market_spread=snapshot.spread,
+        book_bids=_top_book_levels(snapshot.bids),
+        book_asks=_top_book_levels(snapshot.asks),
+        quote=quote,
+        fills=tuple(accepted_fills),
+        portfolio=next_portfolio,
+        equity=equity,
+    )
+
+
 def _simulate_fills(
     fill_model: FillModel,
     quote: Quote,
@@ -243,12 +330,16 @@ def _simulate_fills(
         return simulate_marketable_fills(quote=quote, snapshot=snapshot, quantity=quantity)
     if fill_model == "touch":
         return simulate_touch_fills(quote=quote, snapshot=snapshot, quantity=quantity)
-    raise ValueError('fill_model must be either "marketable" or "touch".')
+    raise ValueError('fill_model must be "marketable", "touch", or "next_snapshot".')
+
+
+def _top_book_levels(levels, depth: int = 8) -> tuple[tuple[float, float], ...]:
+    return tuple((level.price, level.quantity) for level in levels[:depth])
 
 
 def _validate_fill_model(fill_model: FillModel) -> None:
-    if fill_model not in {"marketable", "touch"}:
-        raise ValueError('fill_model must be either "marketable" or "touch".')
+    if fill_model not in {"marketable", "touch", "next_snapshot"}:
+        raise ValueError('fill_model must be "marketable", "touch", or "next_snapshot".')
 
 
 def _max_drawdown(equity_values: Sequence[float]) -> float:
