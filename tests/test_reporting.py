@@ -66,6 +66,15 @@ def test_backtest_results_to_rows_returns_one_row_per_step() -> None:
             "spread": 2.0,
             "bid_distance_from_mid": 1.0,
             "ask_distance_from_mid": 1.0,
+            "quote_levels": (
+                {
+                    "level": 1,
+                    "bid": 99.0,
+                    "ask": 101.0,
+                    "reservation_price": 100.0,
+                    "spread": 2.0,
+                },
+            ),
             "fills": 1,
             "buy_fills": 1,
             "sell_fills": 0,
@@ -94,6 +103,15 @@ def test_backtest_results_to_rows_returns_one_row_per_step() -> None:
             "spread": 2.0,
             "bid_distance_from_mid": 1.0,
             "ask_distance_from_mid": 1.0,
+            "quote_levels": (
+                {
+                    "level": 1,
+                    "bid": 99.0,
+                    "ask": 101.0,
+                    "reservation_price": 100.0,
+                    "spread": 2.0,
+                },
+            ),
             "fills": 1,
             "buy_fills": 0,
             "sell_fills": 1,

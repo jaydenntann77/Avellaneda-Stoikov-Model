@@ -39,6 +39,16 @@ def backtest_results_to_rows(results: Sequence[BacktestStepResult]) -> tuple[dic
                 "spread": result.quote.spread,
                 "bid_distance_from_mid": result.mid_price - result.quote.bid,
                 "ask_distance_from_mid": result.quote.ask - result.mid_price,
+                "quote_levels": tuple(
+                    {
+                        "level": level,
+                        "bid": quote.bid,
+                        "ask": quote.ask,
+                        "reservation_price": quote.reservation_price,
+                        "spread": quote.spread,
+                    }
+                    for level, quote in enumerate(result.quote_levels or (result.quote,), start=1)
+                ),
                 "fills": len(result.fills),
                 "buy_fills": sum(1 for fill in result.fills if fill.side == "buy"),
                 "sell_fills": sum(1 for fill in result.fills if fill.side == "sell"),

@@ -4,6 +4,7 @@ from avellaneda_stoikov.execution import (
     Fill,
     simulate_marketable_fills,
     simulate_next_snapshot_fills,
+    simulate_next_snapshot_ladder_fills,
     simulate_touch_fills,
 )
 from avellaneda_stoikov.model import Quote
@@ -133,3 +134,45 @@ def test_next_snapshot_fill_simulation_requires_positive_quantity() -> None:
 
     with pytest.raises(ValueError, match="quantity must be positive"):
         simulate_next_snapshot_fills(quote, next_snapshot, quantity=0.0)
+
+
+def test_next_snapshot_ladder_fills_multiple_quote_levels() -> None:
+    quote = Quote(bid=100.0, ask=102.0, reservation_price=101.0, spread=2.0)
+    next_snapshot = OrderBookSnapshot.from_levels(bids=[(102.2, 1.0)], asks=[(103.0, 1.0)])
+
+    fills = simulate_next_snapshot_ladder_fills(
+        quote=quote,
+        next_snapshot=next_snapshot,
+        quantity=1.0,
+        quote_levels=3,
+        level_spacing=0.1,
+    )
+
+    assert fills == (
+        Fill(side="sell", price=102.0, quantity=1.0),
+        Fill(side="sell", price=102.1, quantity=1.0),
+        Fill(side="sell", price=102.2, quantity=1.0),
+    )
+
+
+def test_next_snapshot_ladder_fill_simulation_rejects_invalid_settings() -> None:
+    quote = Quote(bid=100.0, ask=102.0, reservation_price=101.0, spread=2.0)
+    next_snapshot = OrderBookSnapshot.from_levels(bids=[(102.2, 1.0)], asks=[(103.0, 1.0)])
+
+    with pytest.raises(ValueError, match="quote_levels must be positive"):
+        simulate_next_snapshot_ladder_fills(
+            quote=quote,
+            next_snapshot=next_snapshot,
+            quantity=1.0,
+            quote_levels=0,
+            level_spacing=0.1,
+        )
+
+    with pytest.raises(ValueError, match="level_spacing cannot be negative"):
+        simulate_next_snapshot_ladder_fills(
+            quote=quote,
+            next_snapshot=next_snapshot,
+            quantity=1.0,
+            quote_levels=2,
+            level_spacing=-0.1,
+        )

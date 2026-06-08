@@ -114,3 +114,36 @@ def simulate_next_snapshot_fills(
         fills.append(Fill(side="sell", price=quote.ask, quantity=quantity))
 
     return tuple(fills)
+
+
+def simulate_next_snapshot_ladder_fills(
+    quote: Quote,
+    next_snapshot: OrderBookSnapshot,
+    quantity: float,
+    quote_levels: int,
+    level_spacing: float,
+) -> tuple[Fill, ...]:
+    """Return passive fills for a symmetric ladder around an A-S quote.
+
+    The first level is the model's base bid/ask. Additional levels are placed
+    farther from the reservation price by ``level_spacing``. This increases the
+    number of passive quote opportunities without changing the A-S quote center.
+    """
+
+    if quantity <= 0:
+        raise ValueError("quantity must be positive.")
+    if quote_levels <= 0:
+        raise ValueError("quote_levels must be positive.")
+    if level_spacing < 0:
+        raise ValueError("level_spacing cannot be negative.")
+
+    fills: list[Fill] = []
+    for level in range(quote_levels):
+        bid = quote.bid - level * level_spacing
+        ask = quote.ask + level * level_spacing
+        if next_snapshot.best_ask <= bid:
+            fills.append(Fill(side="buy", price=bid, quantity=quantity))
+        if next_snapshot.best_bid >= ask:
+            fills.append(Fill(side="sell", price=ask, quantity=quantity))
+
+    return tuple(fills)

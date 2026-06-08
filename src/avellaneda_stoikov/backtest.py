@@ -19,6 +19,7 @@ from avellaneda_stoikov.execution import (
     Fill,
     simulate_marketable_fills,
     simulate_next_snapshot_fills,
+    simulate_next_snapshot_ladder_fills,
     simulate_touch_fills,
 )
 from avellaneda_stoikov.model import ModelParameters, Quote, generate_quote
@@ -41,6 +42,7 @@ class BacktestStepResult:
     fills: tuple[Fill, ...]
     portfolio: PortfolioState
     equity: float
+    quote_levels: tuple[Quote, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -133,12 +135,15 @@ def run_backtest(
     fee_rate: float = 0.0,
     max_absolute_inventory: float | None = None,
     fill_model: FillModel = "marketable",
+    quote_levels: int = 1,
+    quote_level_spacing: float = 0.0,
 ) -> tuple[BacktestStepResult, ...]:
     """Run the simple strategy over a sequence of order book snapshots."""
 
     if not snapshots:
         raise ValueError("at least one snapshot is required.")
     _validate_fill_model(fill_model)
+    _validate_quote_ladder(quote_levels=quote_levels, quote_level_spacing=quote_level_spacing)
 
     results: list[BacktestStepResult] = []
     portfolio = initial_portfolio
@@ -154,6 +159,8 @@ def run_backtest(
                 quote_quantity=quote_quantity,
                 fee_rate=fee_rate,
                 max_absolute_inventory=max_absolute_inventory,
+                quote_levels=quote_levels,
+                quote_level_spacing=quote_level_spacing,
             )
         else:
             result = run_backtest_step(
@@ -179,6 +186,8 @@ def run_backtest_on_binance_messages(
     fee_rate: float = 0.0,
     max_absolute_inventory: float | None = None,
     fill_model: FillModel = "marketable",
+    quote_levels: int = 1,
+    quote_level_spacing: float = 0.0,
 ) -> tuple[BacktestStepResult, ...]:
     """Reconstruct Binance snapshots, then run the simple backtest."""
 
@@ -191,6 +200,8 @@ def run_backtest_on_binance_messages(
         fee_rate=fee_rate,
         max_absolute_inventory=max_absolute_inventory,
         fill_model=fill_model,
+        quote_levels=quote_levels,
+        quote_level_spacing=quote_level_spacing,
     )
 
 
@@ -202,6 +213,8 @@ def run_backtest_on_binance_jsonl(
     fee_rate: float = 0.0,
     max_absolute_inventory: float | None = None,
     fill_model: FillModel = "marketable",
+    quote_levels: int = 1,
+    quote_level_spacing: float = 0.0,
 ) -> tuple[BacktestStepResult, ...]:
     """Load Binance JSONL messages, reconstruct snapshots, then run a backtest."""
 
@@ -214,6 +227,8 @@ def run_backtest_on_binance_jsonl(
         fee_rate=fee_rate,
         max_absolute_inventory=max_absolute_inventory,
         fill_model=fill_model,
+        quote_levels=quote_levels,
+        quote_level_spacing=quote_level_spacing,
     )
 
 
@@ -267,6 +282,8 @@ def _run_next_snapshot_backtest_step(
     quote_quantity: float,
     fee_rate: float,
     max_absolute_inventory: float | None,
+    quote_levels: int,
+    quote_level_spacing: float,
 ) -> BacktestStepResult:
     if quote_quantity <= 0:
         raise ValueError("quote_quantity must be positive.")
@@ -274,21 +291,29 @@ def _run_next_snapshot_backtest_step(
         raise ValueError("fee_rate cannot be negative.")
     if max_absolute_inventory is not None and max_absolute_inventory <= 0:
         raise ValueError("max_absolute_inventory must be positive.")
+    _validate_quote_ladder(quote_levels=quote_levels, quote_level_spacing=quote_level_spacing)
 
     quote = generate_quote(
         mid_price=snapshot.mid_price,
         inventory=portfolio.inventory,
         params=params,
     )
-    fills = (
-        simulate_next_snapshot_fills(
+    if next_snapshot is None:
+        fills = ()
+    elif quote_levels == 1:
+        fills = simulate_next_snapshot_fills(
             quote=quote,
             next_snapshot=next_snapshot,
             quantity=quote_quantity,
         )
-        if next_snapshot is not None
-        else ()
-    )
+    else:
+        fills = simulate_next_snapshot_ladder_fills(
+            quote=quote,
+            next_snapshot=next_snapshot,
+            quantity=quote_quantity,
+            quote_levels=quote_levels,
+            level_spacing=quote_level_spacing,
+        )
 
     next_portfolio = portfolio
     accepted_fills: list[Fill] = []
@@ -317,6 +342,7 @@ def _run_next_snapshot_backtest_step(
         fills=tuple(accepted_fills),
         portfolio=next_portfolio,
         equity=equity,
+        quote_levels=_build_quote_ladder(quote, quote_levels, quote_level_spacing),
     )
 
 
@@ -335,6 +361,29 @@ def _simulate_fills(
 
 def _top_book_levels(levels, depth: int = 8) -> tuple[tuple[float, float], ...]:
     return tuple((level.price, level.quantity) for level in levels[:depth])
+
+
+def _build_quote_ladder(
+    quote: Quote,
+    quote_levels: int,
+    quote_level_spacing: float,
+) -> tuple[Quote, ...]:
+    return tuple(
+        Quote(
+            bid=quote.bid - level * quote_level_spacing,
+            ask=quote.ask + level * quote_level_spacing,
+            reservation_price=quote.reservation_price,
+            spread=quote.spread + 2 * level * quote_level_spacing,
+        )
+        for level in range(quote_levels)
+    )
+
+
+def _validate_quote_ladder(quote_levels: int, quote_level_spacing: float) -> None:
+    if quote_levels <= 0:
+        raise ValueError("quote_levels must be positive.")
+    if quote_level_spacing < 0:
+        raise ValueError("quote_level_spacing cannot be negative.")
 
 
 def _validate_fill_model(fill_model: FillModel) -> None:

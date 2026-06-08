@@ -172,6 +172,31 @@ def test_backtest_can_use_next_snapshot_fill_model() -> None:
     assert results[1].portfolio.inventory == pytest.approx(-1.0)
 
 
+def test_backtest_can_use_next_snapshot_quote_ladder() -> None:
+    snapshots = [
+        OrderBookSnapshot.from_levels(bids=[(99.0, 1.0)], asks=[(101.0, 1.0)]),
+        OrderBookSnapshot.from_levels(bids=[(100.35, 1.0)], asks=[(101.0, 1.0)]),
+    ]
+    params = ModelParameters(gamma=0.1, sigma=0.0, horizon=0.0, k=100.0)
+
+    results = run_backtest(
+        snapshots=snapshots,
+        initial_portfolio=PortfolioState(),
+        params=params,
+        quote_quantity=1.0,
+        fill_model="next_snapshot",
+        quote_levels=3,
+        quote_level_spacing=0.1,
+    )
+
+    assert len(results[0].quote_levels) == 3
+    assert len(results[0].fills) == 3
+    assert results[0].fills[0].side == "sell"
+    assert results[0].fills[1].side == "sell"
+    assert results[0].fills[2].side == "sell"
+    assert results[0].portfolio.inventory == pytest.approx(-3.0)
+
+
 def test_backtest_rejects_empty_snapshot_sequence() -> None:
     with pytest.raises(ValueError, match="at least one snapshot is required"):
         run_backtest(
