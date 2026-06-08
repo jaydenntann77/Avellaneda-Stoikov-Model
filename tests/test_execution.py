@@ -1,6 +1,6 @@
 import pytest
 
-from avellaneda_stoikov.execution import Fill, simulate_marketable_fills
+from avellaneda_stoikov.execution import Fill, simulate_marketable_fills, simulate_touch_fills
 from avellaneda_stoikov.model import Quote
 from avellaneda_stoikov.order_book import OrderBookSnapshot
 
@@ -58,3 +58,38 @@ def test_marketable_fill_simulation_requires_positive_quantity() -> None:
 
     with pytest.raises(ValueError, match="quantity must be positive"):
         simulate_marketable_fills(quote, snapshot, quantity=0.0)
+
+
+def test_touch_fill_model_buys_when_bid_reaches_best_bid() -> None:
+    quote = Quote(bid=99.5, ask=101.5, reservation_price=100.5, spread=2.0)
+    snapshot = OrderBookSnapshot.from_levels(bids=[(99.5, 1.0)], asks=[(100.5, 1.0)])
+
+    fills = simulate_touch_fills(quote, snapshot, quantity=1.0)
+
+    assert fills == (Fill(side="buy", price=99.5, quantity=1.0),)
+
+
+def test_touch_fill_model_sells_when_ask_reaches_best_ask() -> None:
+    quote = Quote(bid=98.5, ask=100.5, reservation_price=99.5, spread=2.0)
+    snapshot = OrderBookSnapshot.from_levels(bids=[(99.5, 1.0)], asks=[(100.5, 1.0)])
+
+    fills = simulate_touch_fills(quote, snapshot, quantity=1.0)
+
+    assert fills == (Fill(side="sell", price=100.5, quantity=1.0),)
+
+
+def test_touch_fill_model_ignores_quotes_away_from_top_of_book() -> None:
+    quote = Quote(bid=99.0, ask=101.0, reservation_price=100.0, spread=2.0)
+    snapshot = OrderBookSnapshot.from_levels(bids=[(99.5, 1.0)], asks=[(100.5, 1.0)])
+
+    fills = simulate_touch_fills(quote, snapshot, quantity=1.0)
+
+    assert fills == ()
+
+
+def test_touch_fill_simulation_requires_positive_quantity() -> None:
+    quote = Quote(bid=99.5, ask=100.5, reservation_price=100.0, spread=1.0)
+    snapshot = OrderBookSnapshot.from_levels(bids=[(99.5, 1.0)], asks=[(100.5, 1.0)])
+
+    with pytest.raises(ValueError, match="quantity must be positive"):
+        simulate_touch_fills(quote, snapshot, quantity=0.0)

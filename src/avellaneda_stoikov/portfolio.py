@@ -21,6 +21,7 @@ class PortfolioState:
 
     cash: float = 0.0
     inventory: float = 0.0
+    fees_paid: float = 0.0
 
 
 def apply_fill(
@@ -49,11 +50,13 @@ def apply_fill(
         return PortfolioState(
             cash=state.cash - notional - fee,
             inventory=state.inventory + quantity,
+            fees_paid=state.fees_paid + fee,
         )
 
     return PortfolioState(
         cash=state.cash + notional - fee,
         inventory=state.inventory - quantity,
+        fees_paid=state.fees_paid + fee,
     )
 
 

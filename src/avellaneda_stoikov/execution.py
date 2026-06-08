@@ -62,3 +62,29 @@ def simulate_marketable_fills(
         fills.append(Fill(side="sell", price=snapshot.best_bid, quantity=quantity))
 
     return tuple(fills)
+
+
+def simulate_touch_fills(
+    quote: Quote,
+    snapshot: OrderBookSnapshot,
+    quantity: float,
+) -> tuple[Fill, ...]:
+    """Return fills for quotes placed at or through the current best prices.
+
+    This approximates passive execution at the top of book. If our bid is at
+    least the current best bid, we assume the bid can buy. If our ask is no
+    higher than the current best ask, we assume the ask can sell.
+    """
+
+    if quantity <= 0:
+        raise ValueError("quantity must be positive.")
+
+    fills: list[Fill] = []
+
+    if quote.bid >= snapshot.best_bid:
+        fills.append(Fill(side="buy", price=quote.bid, quantity=quantity))
+
+    if quote.ask <= snapshot.best_ask:
+        fills.append(Fill(side="sell", price=quote.ask, quantity=quantity))
+
+    return tuple(fills)

@@ -8,6 +8,7 @@ from avellaneda_stoikov.backtest import (
     run_backtest_step,
     summarize_backtest,
 )
+from avellaneda_stoikov.execution import Fill
 from avellaneda_stoikov.model import ModelParameters, Quote
 from avellaneda_stoikov.order_book import OrderBookSnapshot
 from avellaneda_stoikov.portfolio import PortfolioState
@@ -32,6 +33,25 @@ def test_backtest_step_generates_quote_and_marks_unchanged_portfolio() -> None:
     assert result.portfolio == portfolio
     assert result.equity == pytest.approx(0.0)
     assert result.quote.reservation_price == pytest.approx(snapshot.mid_price)
+
+
+def test_backtest_step_can_use_touch_fill_model() -> None:
+    snapshot = OrderBookSnapshot.from_levels(bids=[(99.0, 1.0)], asks=[(101.0, 1.0)])
+    narrow_params = ModelParameters(gamma=0.1, sigma=0.0, horizon=0.0, k=100.0)
+
+    result = run_backtest_step(
+        snapshot=snapshot,
+        portfolio=PortfolioState(),
+        params=narrow_params,
+        quote_quantity=1.0,
+        fill_model="touch",
+    )
+
+    assert len(result.fills) == 2
+    assert result.fills[0].side == "buy"
+    assert result.fills[1].side == "sell"
+    assert result.portfolio.inventory == pytest.approx(0.0)
+    assert result.equity > 0.0
 
 
 def test_backtest_step_applies_marketable_fill_to_portfolio() -> None:
@@ -183,20 +203,20 @@ def test_backtest_summary_reports_basic_metrics() -> None:
     results = (
         BacktestStepResult(
             quote=quote,
-            fills=(),
-            portfolio=PortfolioState(inventory=1.0),
+            fills=(Fill(side="buy", price=99.0, quantity=1.0),),
+            portfolio=PortfolioState(inventory=1.0, fees_paid=0.1),
             equity=0.0,
         ),
         BacktestStepResult(
             quote=quote,
-            fills=(),
-            portfolio=PortfolioState(inventory=-3.0),
+            fills=(Fill(side="sell", price=101.0, quantity=1.0),),
+            portfolio=PortfolioState(inventory=-3.0, fees_paid=0.2),
             equity=5.0,
         ),
         BacktestStepResult(
             quote=quote,
-            fills=(),
-            portfolio=PortfolioState(inventory=2.0),
+            fills=(Fill(side="sell", price=102.0, quantity=2.0),),
+            portfolio=PortfolioState(inventory=2.0, fees_paid=0.3),
             equity=2.0,
         ),
     )
@@ -205,7 +225,11 @@ def test_backtest_summary_reports_basic_metrics() -> None:
 
     assert summary.final_equity == pytest.approx(2.0)
     assert summary.final_inventory == pytest.approx(2.0)
-    assert summary.total_fills == 0
+    assert summary.total_fills == 3
+    assert summary.buy_fills == 1
+    assert summary.sell_fills == 2
+    assert summary.traded_notional == pytest.approx(404.0)
+    assert summary.total_fees == pytest.approx(0.3)
     assert summary.max_absolute_inventory == pytest.approx(3.0)
     assert summary.min_equity == pytest.approx(0.0)
     assert summary.max_equity == pytest.approx(5.0)
@@ -244,4 +268,13 @@ def test_backtest_step_rejects_invalid_execution_settings() -> None:
             params=base_params(),
             quote_quantity=1.0,
             max_absolute_inventory=0.0,
+        )
+
+    with pytest.raises(ValueError, match='fill_model must be either "marketable" or "touch"'):
+        run_backtest_step(
+            snapshot=snapshot,
+            portfolio=PortfolioState(),
+            params=base_params(),
+            quote_quantity=1.0,
+            fill_model="unknown",
         )

@@ -11,6 +11,7 @@ def test_buy_fill_reduces_cash_and_increases_inventory() -> None:
 
     assert next_state.cash == pytest.approx(-200.0)
     assert next_state.inventory == pytest.approx(2.0)
+    assert next_state.fees_paid == pytest.approx(0.0)
 
 
 def test_sell_fill_increases_cash_and_decreases_inventory() -> None:
@@ -20,6 +21,7 @@ def test_sell_fill_increases_cash_and_decreases_inventory() -> None:
 
     assert next_state.cash == pytest.approx(151.5)
     assert next_state.inventory == pytest.approx(0.5)
+    assert next_state.fees_paid == pytest.approx(0.0)
 
 
 def test_fee_is_paid_on_both_buys_and_sells() -> None:
@@ -40,6 +42,16 @@ def test_fee_is_paid_on_both_buys_and_sells() -> None:
 
     assert buy_state.cash == pytest.approx(-100.1)
     assert sell_state.cash == pytest.approx(99.9)
+    assert buy_state.fees_paid == pytest.approx(0.1)
+    assert sell_state.fees_paid == pytest.approx(0.1)
+
+
+def test_fees_accumulate_across_fills() -> None:
+    state = PortfolioState()
+    state = apply_fill(state, side="buy", price=100.0, quantity=1.0, fee_rate=0.001)
+    state = apply_fill(state, side="sell", price=101.0, quantity=1.0, fee_rate=0.001)
+
+    assert state.fees_paid == pytest.approx(0.201)
 
 
 def test_mark_to_market_values_inventory_at_mid_price() -> None:
@@ -57,6 +69,7 @@ def test_apply_fill_event_updates_portfolio_from_fill_object() -> None:
 
     assert next_state.cash == pytest.approx(-200.0)
     assert next_state.inventory == pytest.approx(2.0)
+    assert next_state.fees_paid == pytest.approx(0.0)
 
 
 def test_invalid_fill_inputs_raise_clear_errors() -> None:
