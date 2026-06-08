@@ -22,7 +22,7 @@ class BookLevel:
 class OrderBookSnapshot:
     """Validated bid/ask levels observed at one point in time."""
 
-    bids: tuple[BookLevel, ...]
+    bids: tuple[BookLevel, ...] # each side is a tuple of BookLevels 
     asks: tuple[BookLevel, ...]
 
     @classmethod
