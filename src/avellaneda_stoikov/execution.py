@@ -9,6 +9,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Literal
 
+from avellaneda_stoikov.model import Quote
+from avellaneda_stoikov.order_book import OrderBookSnapshot
+
 
 FillSide = Literal["buy", "sell"]
 
@@ -34,3 +37,28 @@ class Fill:
         """Trade value before fees."""
 
         return self.price * self.quantity
+
+
+def simulate_marketable_fills(
+    quote: Quote,
+    snapshot: OrderBookSnapshot,
+    quantity: float,
+) -> tuple[Fill, ...]:
+    """Return fills for quotes that immediately cross the top of book.
+
+    This is a deliberately simple execution rule. It only fills quotes that are
+    marketable against the visible best bid or ask in the current snapshot.
+    """
+
+    if quantity <= 0:
+        raise ValueError("quantity must be positive.")
+
+    fills: list[Fill] = []
+
+    if quote.bid >= snapshot.best_ask:
+        fills.append(Fill(side="buy", price=snapshot.best_ask, quantity=quantity))
+
+    if quote.ask <= snapshot.best_bid:
+        fills.append(Fill(side="sell", price=snapshot.best_bid, quantity=quantity))
+
+    return tuple(fills)

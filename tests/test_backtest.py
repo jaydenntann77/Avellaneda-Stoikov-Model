@@ -1,0 +1,183 @@
+import pytest
+
+from avellaneda_stoikov.backtest import run_backtest, run_backtest_step, summarize_backtest
+from avellaneda_stoikov.model import ModelParameters
+from avellaneda_stoikov.order_book import OrderBookSnapshot
+from avellaneda_stoikov.portfolio import PortfolioState
+
+
+def base_params() -> ModelParameters:
+    return ModelParameters(gamma=0.1, sigma=1.0, horizon=1.0, k=1.0)
+
+
+def test_backtest_step_generates_quote_and_marks_unchanged_portfolio() -> None:
+    snapshot = OrderBookSnapshot.from_levels(bids=[(99.0, 1.0)], asks=[(101.0, 1.0)])
+    portfolio = PortfolioState()
+
+    result = run_backtest_step(
+        snapshot=snapshot,
+        portfolio=portfolio,
+        params=base_params(),
+        quote_quantity=1.0,
+    )
+
+    assert result.fills == ()
+    assert result.portfolio == portfolio
+    assert result.equity == pytest.approx(0.0)
+    assert result.quote.reservation_price == pytest.approx(snapshot.mid_price)
+
+
+def test_backtest_step_applies_marketable_fill_to_portfolio() -> None:
+    snapshot = OrderBookSnapshot.from_levels(bids=[(99.0, 1.0)], asks=[(101.0, 1.0)])
+    params = ModelParameters(gamma=0.1, sigma=1.0, horizon=1.0, k=100.0)
+
+    result = run_backtest_step(
+        snapshot=snapshot,
+        portfolio=PortfolioState(inventory=-20.0),
+        params=params,
+        quote_quantity=2.0,
+    )
+
+    assert len(result.fills) == 1
+    assert result.fills[0].side == "buy"
+    assert result.fills[0].price == pytest.approx(101.0)
+    assert result.portfolio.inventory == pytest.approx(-18.0)
+    assert result.portfolio.cash == pytest.approx(-202.0)
+    assert result.equity == pytest.approx(-2002.0)
+
+
+def test_backtest_step_skips_buy_that_would_exceed_inventory_limit() -> None:
+    snapshot = OrderBookSnapshot.from_levels(bids=[(99.0, 1.0)], asks=[(101.0, 1.0)])
+    params = ModelParameters(gamma=0.1, sigma=1.0, horizon=1.0, k=100.0)
+    portfolio = PortfolioState(inventory=-20.0)
+
+    result = run_backtest_step(
+        snapshot=snapshot,
+        portfolio=portfolio,
+        params=params,
+        quote_quantity=2.0,
+        max_absolute_inventory=17.0,
+    )
+
+    assert result.fills == ()
+    assert result.portfolio == portfolio
+
+
+def test_backtest_step_skips_sell_that_would_exceed_inventory_limit() -> None:
+    snapshot = OrderBookSnapshot.from_levels(bids=[(99.0, 1.0)], asks=[(101.0, 1.0)])
+    params = ModelParameters(gamma=0.1, sigma=1.0, horizon=1.0, k=100.0)
+    portfolio = PortfolioState(inventory=20.0)
+
+    result = run_backtest_step(
+        snapshot=snapshot,
+        portfolio=portfolio,
+        params=params,
+        quote_quantity=2.0,
+        max_absolute_inventory=17.0,
+    )
+
+    assert result.fills == ()
+    assert result.portfolio == portfolio
+
+
+def test_backtest_step_uses_current_inventory_when_generating_quote() -> None:
+    snapshot = OrderBookSnapshot.from_levels(bids=[(99.0, 1.0)], asks=[(101.0, 1.0)])
+    flat_result = run_backtest_step(
+        snapshot=snapshot,
+        portfolio=PortfolioState(),
+        params=base_params(),
+        quote_quantity=1.0,
+    )
+    long_result = run_backtest_step(
+        snapshot=snapshot,
+        portfolio=PortfolioState(inventory=1.0),
+        params=base_params(),
+        quote_quantity=1.0,
+    )
+
+    assert long_result.quote.reservation_price < flat_result.quote.reservation_price
+
+
+def test_backtest_runs_snapshots_in_sequence() -> None:
+    snapshots = [
+        OrderBookSnapshot.from_levels(bids=[(99.0, 1.0)], asks=[(101.0, 1.0)]),
+        OrderBookSnapshot.from_levels(bids=[(100.0, 1.0)], asks=[(102.0, 1.0)]),
+    ]
+    params = ModelParameters(gamma=0.1, sigma=1.0, horizon=1.0, k=100.0)
+
+    results = run_backtest(
+        snapshots=snapshots,
+        initial_portfolio=PortfolioState(inventory=-20.0),
+        params=params,
+        quote_quantity=2.0,
+    )
+
+    assert len(results) == 2
+    assert results[0].portfolio.inventory == pytest.approx(-18.0)
+    assert results[1].quote.reservation_price == pytest.approx(102.8)
+
+
+def test_backtest_rejects_empty_snapshot_sequence() -> None:
+    with pytest.raises(ValueError, match="at least one snapshot is required"):
+        run_backtest(
+            snapshots=[],
+            initial_portfolio=PortfolioState(),
+            params=base_params(),
+            quote_quantity=1.0,
+        )
+
+
+def test_backtest_summary_reports_basic_metrics() -> None:
+    snapshots = [
+        OrderBookSnapshot.from_levels(bids=[(99.0, 1.0)], asks=[(101.0, 1.0)]),
+        OrderBookSnapshot.from_levels(bids=[(100.0, 1.0)], asks=[(102.0, 1.0)]),
+    ]
+    params = ModelParameters(gamma=0.1, sigma=1.0, horizon=1.0, k=100.0)
+    results = run_backtest(
+        snapshots=snapshots,
+        initial_portfolio=PortfolioState(inventory=-20.0),
+        params=params,
+        quote_quantity=2.0,
+    )
+
+    summary = summarize_backtest(results)
+
+    assert summary.final_equity == pytest.approx(results[-1].equity)
+    assert summary.final_inventory == pytest.approx(results[-1].portfolio.inventory)
+    assert summary.total_fills == 2
+    assert summary.max_absolute_inventory == pytest.approx(18.0)
+
+
+def test_backtest_summary_rejects_empty_results() -> None:
+    with pytest.raises(ValueError, match="at least one backtest result is required"):
+        summarize_backtest([])
+
+
+def test_backtest_step_rejects_invalid_execution_settings() -> None:
+    snapshot = OrderBookSnapshot.from_levels(bids=[(99.0, 1.0)], asks=[(101.0, 1.0)])
+
+    with pytest.raises(ValueError, match="quote_quantity must be positive"):
+        run_backtest_step(
+            snapshot=snapshot,
+            portfolio=PortfolioState(),
+            params=base_params(),
+            quote_quantity=0.0,
+        )
+
+    with pytest.raises(ValueError, match="fee_rate cannot be negative"):
+        run_backtest_step(
+            snapshot=snapshot,
+            portfolio=PortfolioState(),
+            params=base_params(),
+            quote_quantity=1.0,
+            fee_rate=-0.001,
+        )
+
+    with pytest.raises(ValueError, match="max_absolute_inventory must be positive"):
+        run_backtest_step(
+            snapshot=snapshot,
+            portfolio=PortfolioState(),
+            params=base_params(),
+            quote_quantity=1.0,
+            max_absolute_inventory=0.0,
+        )

@@ -7,11 +7,15 @@ does not decide whether a quote gets filled; execution logic will come later.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Literal
 
-from avellaneda_stoikov.execution import Fill, FillSide
+from avellaneda_stoikov.execution import Fill
 
 
-@dataclass(frozen=True)
+FillSide = Literal["buy", "sell"] # use Literal type to restrict FillSide to exact string values
+
+
+@dataclass(frozen=True) # use frozen means we dont mutate the old state. instead every update returns a new PortfolioState
 class PortfolioState:
     """Cash and inventory held by the simulated market maker."""
 
