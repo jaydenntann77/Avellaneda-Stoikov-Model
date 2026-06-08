@@ -8,7 +8,13 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 from dataclasses import dataclass
+from pathlib import Path
+from typing import Any
 
+from avellaneda_stoikov.binance import (
+    load_binance_depth_messages_jsonl,
+    reconstruct_snapshots_from_binance_messages,
+)
 from avellaneda_stoikov.execution import Fill, simulate_marketable_fills
 from avellaneda_stoikov.model import ModelParameters, Quote, generate_quote
 from avellaneda_stoikov.order_book import OrderBookSnapshot
@@ -33,6 +39,9 @@ class BacktestSummary:
     final_inventory: float
     total_fills: int
     max_absolute_inventory: float
+    min_equity: float
+    max_equity: float
+    max_drawdown: float
 
 
 def run_backtest_step(
@@ -124,6 +133,48 @@ def run_backtest(
     return tuple(results)
 
 
+def run_backtest_on_binance_messages(
+    messages: Sequence[dict[str, Any]],
+    initial_portfolio: PortfolioState,
+    params: ModelParameters,
+    quote_quantity: float,
+    fee_rate: float = 0.0,
+    max_absolute_inventory: float | None = None,
+) -> tuple[BacktestStepResult, ...]:
+    """Reconstruct Binance snapshots, then run the simple backtest."""
+
+    snapshots = reconstruct_snapshots_from_binance_messages(messages)
+    return run_backtest(
+        snapshots=snapshots,
+        initial_portfolio=initial_portfolio,
+        params=params,
+        quote_quantity=quote_quantity,
+        fee_rate=fee_rate,
+        max_absolute_inventory=max_absolute_inventory,
+    )
+
+
+def run_backtest_on_binance_jsonl(
+    path: str | Path,
+    initial_portfolio: PortfolioState,
+    params: ModelParameters,
+    quote_quantity: float,
+    fee_rate: float = 0.0,
+    max_absolute_inventory: float | None = None,
+) -> tuple[BacktestStepResult, ...]:
+    """Load Binance JSONL messages, reconstruct snapshots, then run a backtest."""
+
+    messages = load_binance_depth_messages_jsonl(path)
+    return run_backtest_on_binance_messages(
+        messages=messages,
+        initial_portfolio=initial_portfolio,
+        params=params,
+        quote_quantity=quote_quantity,
+        fee_rate=fee_rate,
+        max_absolute_inventory=max_absolute_inventory,
+    )
+
+
 def summarize_backtest(results: Sequence[BacktestStepResult]) -> BacktestSummary:
     """Return basic metrics from a completed backtest."""
 
@@ -133,12 +184,16 @@ def summarize_backtest(results: Sequence[BacktestStepResult]) -> BacktestSummary
     final_result = results[-1]
     total_fills = sum(len(result.fills) for result in results)
     max_absolute_inventory = max(abs(result.portfolio.inventory) for result in results)
+    equity_values = [result.equity for result in results]
 
     return BacktestSummary(
         final_equity=final_result.equity,
         final_inventory=final_result.portfolio.inventory,
         total_fills=total_fills,
         max_absolute_inventory=max_absolute_inventory,
+        min_equity=min(equity_values),
+        max_equity=max(equity_values),
+        max_drawdown=_max_drawdown(equity_values),
     )
 
 
@@ -153,3 +208,14 @@ def _fill_respects_inventory_limit(
     inventory_change = fill.quantity if fill.side == "buy" else -fill.quantity
     next_inventory = portfolio.inventory + inventory_change
     return abs(next_inventory) <= max_absolute_inventory
+
+
+def _max_drawdown(equity_values: Sequence[float]) -> float:
+    peak = equity_values[0]
+    max_drawdown = 0.0
+
+    for equity in equity_values:
+        peak = max(peak, equity)
+        max_drawdown = max(max_drawdown, peak - equity)
+
+    return max_drawdown

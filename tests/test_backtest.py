@@ -1,7 +1,14 @@
 import pytest
 
-from avellaneda_stoikov.backtest import run_backtest, run_backtest_step, summarize_backtest
-from avellaneda_stoikov.model import ModelParameters
+from avellaneda_stoikov.backtest import (
+    BacktestStepResult,
+    run_backtest,
+    run_backtest_on_binance_jsonl,
+    run_backtest_on_binance_messages,
+    run_backtest_step,
+    summarize_backtest,
+)
+from avellaneda_stoikov.model import ModelParameters, Quote
 from avellaneda_stoikov.order_book import OrderBookSnapshot
 from avellaneda_stoikov.portfolio import PortfolioState
 
@@ -127,25 +134,82 @@ def test_backtest_rejects_empty_snapshot_sequence() -> None:
         )
 
 
-def test_backtest_summary_reports_basic_metrics() -> None:
-    snapshots = [
-        OrderBookSnapshot.from_levels(bids=[(99.0, 1.0)], asks=[(101.0, 1.0)]),
-        OrderBookSnapshot.from_levels(bids=[(100.0, 1.0)], asks=[(102.0, 1.0)]),
+def test_backtest_runs_on_binance_messages() -> None:
+    messages = [
+        {
+            "bids": [["99.0", "1.0"]],
+            "asks": [["101.0", "1.0"]],
+        },
+        {
+            "b": [["100.0", "1.0"]],
+            "a": [["102.0", "1.0"]],
+        },
     ]
-    params = ModelParameters(gamma=0.1, sigma=1.0, horizon=1.0, k=100.0)
-    results = run_backtest(
-        snapshots=snapshots,
-        initial_portfolio=PortfolioState(inventory=-20.0),
-        params=params,
-        quote_quantity=2.0,
+
+    results = run_backtest_on_binance_messages(
+        messages=messages,
+        initial_portfolio=PortfolioState(),
+        params=base_params(),
+        quote_quantity=1.0,
+    )
+
+    assert len(results) == 2
+    assert results[0].quote.reservation_price == pytest.approx(100.0)
+    assert results[1].quote.reservation_price == pytest.approx(100.5)
+
+
+def test_backtest_runs_on_binance_jsonl_file(tmp_path) -> None:
+    path = tmp_path / "depth.jsonl"
+    path.write_text(
+        '{"bids": [["99.0", "1.0"]], "asks": [["101.0", "1.0"]]}\n'
+        '{"b": [["100.0", "1.0"]], "a": [["102.0", "1.0"]]}\n',
+        encoding="utf-8",
+    )
+
+    results = run_backtest_on_binance_jsonl(
+        path=path,
+        initial_portfolio=PortfolioState(),
+        params=base_params(),
+        quote_quantity=1.0,
+    )
+
+    assert len(results) == 2
+    assert results[0].quote.reservation_price == pytest.approx(100.0)
+    assert results[1].quote.reservation_price == pytest.approx(100.5)
+
+
+def test_backtest_summary_reports_basic_metrics() -> None:
+    quote = Quote(bid=99.0, ask=101.0, reservation_price=100.0, spread=2.0)
+    results = (
+        BacktestStepResult(
+            quote=quote,
+            fills=(),
+            portfolio=PortfolioState(inventory=1.0),
+            equity=0.0,
+        ),
+        BacktestStepResult(
+            quote=quote,
+            fills=(),
+            portfolio=PortfolioState(inventory=-3.0),
+            equity=5.0,
+        ),
+        BacktestStepResult(
+            quote=quote,
+            fills=(),
+            portfolio=PortfolioState(inventory=2.0),
+            equity=2.0,
+        ),
     )
 
     summary = summarize_backtest(results)
 
-    assert summary.final_equity == pytest.approx(results[-1].equity)
-    assert summary.final_inventory == pytest.approx(results[-1].portfolio.inventory)
-    assert summary.total_fills == 2
-    assert summary.max_absolute_inventory == pytest.approx(18.0)
+    assert summary.final_equity == pytest.approx(2.0)
+    assert summary.final_inventory == pytest.approx(2.0)
+    assert summary.total_fills == 0
+    assert summary.max_absolute_inventory == pytest.approx(3.0)
+    assert summary.min_equity == pytest.approx(0.0)
+    assert summary.max_equity == pytest.approx(5.0)
+    assert summary.max_drawdown == pytest.approx(3.0)
 
 
 def test_backtest_summary_rejects_empty_results() -> None:

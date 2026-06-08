@@ -1,8 +1,14 @@
+import json
+
 import pytest
 
+import avellaneda_stoikov.binance as binance_module
 from avellaneda_stoikov.binance import (
     BinanceOrderBook,
+    fetch_binance_futures_depth_snapshot,
+    load_binance_depth_messages_jsonl,
     reconstruct_snapshots_from_binance_messages,
+    save_live_binance_depth_snapshots_jsonl,
     snapshot_from_binance_depth,
 )
 
@@ -124,3 +130,98 @@ def test_binance_order_book_rejects_update_without_bid_or_ask_levels() -> None:
 
     with pytest.raises(ValueError, match="depth update must contain bid or ask levels"):
         book.apply_depth_update({"eventTime": 123})
+
+
+def test_load_binance_depth_messages_jsonl_reads_messages(tmp_path) -> None:
+    path = tmp_path / "depth.jsonl"
+    path.write_text(
+        '\n{"bids": [["100.0", "1.0"]], "asks": [["101.0", "1.0"]]}\n'
+        '{"b": [["100.0", "2.0"]]}\n',
+        encoding="utf-8",
+    )
+
+    messages = load_binance_depth_messages_jsonl(path)
+
+    assert messages == (
+        {"bids": [["100.0", "1.0"]], "asks": [["101.0", "1.0"]]},
+        {"b": [["100.0", "2.0"]]},
+    )
+
+
+def test_load_binance_depth_messages_jsonl_rejects_invalid_json(tmp_path) -> None:
+    path = tmp_path / "depth.jsonl"
+    path.write_text("{bad json}\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="line 1 is not valid JSON"):
+        load_binance_depth_messages_jsonl(path)
+
+
+def test_load_binance_depth_messages_jsonl_rejects_non_object_lines(tmp_path) -> None:
+    path = tmp_path / "depth.jsonl"
+    path.write_text("[1, 2, 3]\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="line 1 must contain a JSON object"):
+        load_binance_depth_messages_jsonl(path)
+
+
+def test_load_binance_depth_messages_jsonl_rejects_empty_files(tmp_path) -> None:
+    path = tmp_path / "depth.jsonl"
+    path.write_text("\n\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="JSONL file must contain at least one message"):
+        load_binance_depth_messages_jsonl(path)
+
+
+def test_fetch_binance_futures_depth_snapshot_rejects_invalid_inputs() -> None:
+    with pytest.raises(ValueError, match="symbol must be a non-empty alphanumeric string"):
+        fetch_binance_futures_depth_snapshot(symbol="BTC/USDT")
+
+    with pytest.raises(ValueError, match="limit must be one of"):
+        fetch_binance_futures_depth_snapshot(limit=7)
+
+    with pytest.raises(ValueError, match="timeout_seconds must be positive"):
+        fetch_binance_futures_depth_snapshot(timeout_seconds=0.0)
+
+
+def test_save_live_binance_depth_snapshots_jsonl_writes_fetched_messages(
+    tmp_path,
+    monkeypatch,
+) -> None:
+    messages = [
+        {"lastUpdateId": 1, "bids": [["100.0", "1.0"]], "asks": [["101.0", "1.0"]]},
+        {"lastUpdateId": 2, "bids": [["100.5", "1.0"]], "asks": [["101.5", "1.0"]]},
+    ]
+
+    def fake_fetch_binance_futures_depth_snapshot(symbol, limit):
+        return messages.pop(0)
+
+    monkeypatch.setattr(
+        binance_module,
+        "fetch_binance_futures_depth_snapshot",
+        fake_fetch_binance_futures_depth_snapshot,
+    )
+    path = tmp_path / "depth.jsonl"
+
+    save_live_binance_depth_snapshots_jsonl(
+        path=path,
+        symbol="BTCUSDT",
+        limit=5,
+        snapshot_count=2,
+        interval_seconds=0.0,
+    )
+
+    saved_messages = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
+    assert saved_messages == [
+        {"lastUpdateId": 1, "bids": [["100.0", "1.0"]], "asks": [["101.0", "1.0"]]},
+        {"lastUpdateId": 2, "bids": [["100.5", "1.0"]], "asks": [["101.5", "1.0"]]},
+    ]
+
+
+def test_save_live_binance_depth_snapshots_jsonl_rejects_invalid_inputs(tmp_path) -> None:
+    path = tmp_path / "depth.jsonl"
+
+    with pytest.raises(ValueError, match="snapshot_count must be positive"):
+        save_live_binance_depth_snapshots_jsonl(path=path, snapshot_count=0)
+
+    with pytest.raises(ValueError, match="interval_seconds cannot be negative"):
+        save_live_binance_depth_snapshots_jsonl(path=path, interval_seconds=-1.0)

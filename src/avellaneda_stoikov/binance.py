@@ -2,11 +2,20 @@
 
 from __future__ import annotations
 
+import json
+import time
+import urllib.parse
+import urllib.request
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 from avellaneda_stoikov.order_book import OrderBookSnapshot
+
+
+BINANCE_USD_M_FUTURES_BASE_URL = "https://fapi.binance.com"
+SUPPORTED_DEPTH_LIMITS = {5, 10, 20, 50, 100, 500, 1000}
 
 
 @dataclass(frozen=True)
@@ -115,6 +124,81 @@ def snapshot_from_binance_depth(message: Mapping[str, Any]) -> OrderBookSnapshot
     )
 
 
+def load_binance_depth_messages_jsonl(path: str | Path) -> tuple[dict[str, Any], ...]:
+    """Load Binance depth messages from a newline-delimited JSON file.
+
+    Blank lines are ignored. Each non-blank line must be a JSON object.
+    """
+
+    messages = []
+    for line_number, line in enumerate(Path(path).read_text(encoding="utf-8").splitlines(), start=1):
+        stripped_line = line.strip()
+        if not stripped_line:
+            continue
+
+        try:
+            message = json.loads(stripped_line)
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"line {line_number} is not valid JSON.") from exc
+
+        if not isinstance(message, dict):
+            raise ValueError(f"line {line_number} must contain a JSON object.")
+
+        messages.append(message)
+
+    if not messages:
+        raise ValueError("JSONL file must contain at least one message.")
+
+    return tuple(messages)
+
+
+def fetch_binance_futures_depth_snapshot(
+    symbol: str = "BTCUSDT",
+    limit: int = 100,
+    timeout_seconds: float = 10.0,
+    base_url: str = BINANCE_USD_M_FUTURES_BASE_URL,
+) -> dict[str, Any]:
+    """Fetch one live Binance USD-M futures order book snapshot."""
+
+    _validate_symbol(symbol)
+    _validate_depth_limit(limit)
+    if timeout_seconds <= 0:
+        raise ValueError("timeout_seconds must be positive.")
+
+    query = urllib.parse.urlencode({"symbol": symbol.upper(), "limit": limit})
+    url = f"{base_url.rstrip('/')}/fapi/v1/depth?{query}"
+    with urllib.request.urlopen(url, timeout=timeout_seconds) as response:
+        payload = json.loads(response.read().decode("utf-8"))
+
+    if not isinstance(payload, dict):
+        raise ValueError("Binance depth response must be a JSON object.")
+    return payload
+
+
+def save_live_binance_depth_snapshots_jsonl(
+    path: str | Path,
+    symbol: str = "BTCUSDT",
+    limit: int = 100,
+    snapshot_count: int = 1,
+    interval_seconds: float = 1.0,
+) -> None:
+    """Fetch live depth snapshots and save them as newline-delimited JSON."""
+
+    if snapshot_count <= 0:
+        raise ValueError("snapshot_count must be positive.")
+    if interval_seconds < 0:
+        raise ValueError("interval_seconds cannot be negative.")
+
+    output_path = Path(path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with output_path.open("w", encoding="utf-8") as file:
+        for snapshot_index in range(snapshot_count):
+            message = fetch_binance_futures_depth_snapshot(symbol=symbol, limit=limit)
+            file.write(json.dumps(message, separators=(",", ":")) + "\n")
+            if snapshot_index < snapshot_count - 1 and interval_seconds > 0:
+                time.sleep(interval_seconds)
+
+
 def _get_levels(
     message: Mapping[str, Any],
     long_key: str,
@@ -163,3 +247,13 @@ def _apply_level_updates(
             levels.pop(price, None)
         else:
             levels[price] = quantity
+
+
+def _validate_symbol(symbol: str) -> None:
+    if not symbol or not symbol.isalnum():
+        raise ValueError("symbol must be a non-empty alphanumeric string.")
+
+
+def _validate_depth_limit(limit: int) -> None:
+    if limit not in SUPPORTED_DEPTH_LIMITS:
+        raise ValueError(f"limit must be one of {sorted(SUPPORTED_DEPTH_LIMITS)}.")
