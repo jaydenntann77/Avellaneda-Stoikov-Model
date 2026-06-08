@@ -1,0 +1,59 @@
+{
+  "summary": {
+    "final_equity": -0.1516633499800071,
+    "final_inventory": 0.0,
+    "total_fills": 6,
+    "buy_fills": 3,
+    "sell_fills": 3,
+    "traded_notional": 379.30830000000003,
+    "total_fees": 0.15172332000000002,
+    "max_absolute_inventory": 0.0,
+    "min_equity": -0.1516633499800071,
+    "max_equity": -0.05055444999333704,
+    "max_drawdown": 0.10110889998667007
+  },
+  "rows": [
+    {
+      "step": 1,
+      "bid": 63218.04000499667,
+      "ask": 63218.059995003336,
+      "reservation_price": 63218.05,
+      "spread": 0.019990006661668464,
+      "fills": 2,
+      "buy_fills": 1,
+      "sell_fills": 1,
+      "cash": -0.05055444999333704,
+      "inventory": 0.0,
+      "fees_paid": 0.050574440000000005,
+      "equity": -0.05055444999333704
+    },
+    {
+      "step": 2,
+      "bid": 63218.04000499667,
+      "ask": 63218.059995003336,
+      "reservation_price": 63218.05,
+      "spread": 0.019990006661668464,
+      "fills": 2,
+      "buy_fills": 1,
+      "sell_fills": 1,
+      "cash": -0.10110889998667207,
+      "inventory": 0.0,
+      "fees_paid": 0.10114888000000001,
+      "equity": -0.10110889998667207
+    },
+    {
+      "step": 3,
+      "bid": 63218.04000499667,
+      "ask": 63218.059995003336,
+      "reservation_price": 63218.05,
+      "spread": 0.019990006661668464,
+      "fills": 2,
+      "buy_fills": 1,
+      "sell_fills": 1,
+      "cash": -0.1516633499800071,
+      "inventory": 0.0,
+      "fees_paid": 0.15172332000000002,
+      "equity": -0.1516633499800071
+    }
+  ]
+}

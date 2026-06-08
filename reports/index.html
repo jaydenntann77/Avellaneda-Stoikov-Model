@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Avellaneda-Stoikov Backtest Report</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f7f8fa;
+        --ink: #19212a;
+        --muted: #667085;
+        --line: #d6dae1;
+        --panel: #ffffff;
+        --accent: #0f766e;
+        --danger: #b42318;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      main {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 32px 20px 48px;
+      }
+
+      header {
+        margin-bottom: 28px;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: 32px;
+        line-height: 1.15;
+      }
+
+      p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+        margin: 24px 0;
+      }
+
+      .charts {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 14px;
+        margin: 0 0 24px;
+      }
+
+      .chart {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 14px;
+      }
+
+      .chart h2 {
+        margin: 0 0 10px;
+        font-size: 16px;
+      }
+
+      svg {
+        display: block;
+        width: 100%;
+        height: 220px;
+      }
+
+      .axis {
+        stroke: var(--line);
+        stroke-width: 1;
+      }
+
+      .equity-line {
+        fill: none;
+        stroke: var(--danger);
+        stroke-width: 3;
+      }
+
+      .inventory-line {
+        fill: none;
+        stroke: var(--accent);
+        stroke-width: 3;
+      }
+
+      .point {
+        fill: var(--panel);
+        stroke-width: 2;
+      }
+
+      .metric {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 14px;
+      }
+
+      .label {
+        color: var(--muted);
+        font-size: 12px;
+        text-transform: uppercase;
+      }
+
+      .value {
+        margin-top: 8px;
+        font-size: 22px;
+        font-weight: 700;
+      }
+
+      .negative {
+        color: var(--danger);
+      }
+
+      .positive {
+        color: var(--accent);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid var(--line);
+        padding: 10px 12px;
+        text-align: right;
+        font-size: 14px;
+      }
+
+      th:first-child,
+      td:first-child {
+        text-align: left;
+      }
+
+      th {
+        color: var(--muted);
+        font-size: 12px;
+        text-transform: uppercase;
+      }
+
+      tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .note {
+        margin-top: 14px;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Avellaneda-Stoikov Backtest Report</h1>
+        <p>
+          Real Binance BTCUSDT Futures depth sample, replayed through a simple
+          inventory-aware market making backtest.
+        </p>
+      </header>
+
+      <section class="metrics" id="metrics"></section>
+
+      <section class="charts">
+        <article class="chart">
+          <h2>Equity Curve</h2>
+          <svg id="equity-chart" viewBox="0 0 640 220" role="img" aria-label="Equity curve"></svg>
+        </article>
+        <article class="chart">
+          <h2>Inventory Path</h2>
+          <svg id="inventory-chart" viewBox="0 0 640 220" role="img" aria-label="Inventory path"></svg>
+        </article>
+      </section>
+
+      <section>
+        <table>
+          <thead>
+            <tr>
+              <th>Step</th>
+              <th>Bid</th>
+              <th>Ask</th>
+              <th>Fills</th>
+              <th>Inventory</th>
+              <th>Fees</th>
+              <th>Equity</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+        <p class="note">
+          Fill model: touch approximation. This is a research backtest, not a
+          production trading simulator.
+        </p>
+      </section>
+    </main>
+
+    <script>
+      async function loadReport() {
+        const response = await fetch("./latest_backtest.json");
+        const report = await response.json();
+        renderMetrics(report.summary);
+        renderChart("equity-chart", report.rows, "equity", "equity-line", "var(--danger)");
+        renderChart("inventory-chart", report.rows, "inventory", "inventory-line", "var(--accent)");
+        renderRows(report.rows);
+      }
+
+      function formatNumber(value, digits = 6) {
+        return Number(value).toFixed(digits);
+      }
+
+      function renderMetrics(summary) {
+        const metrics = [
+          ["Final equity", formatNumber(summary.final_equity, 8), summary.final_equity],
+          ["Total fills", summary.total_fills, summary.total_fills],
+          ["Buy / sell", `${summary.buy_fills} / ${summary.sell_fills}`, 0],
+          ["Traded notional", formatNumber(summary.traded_notional, 4), summary.traded_notional],
+          ["Total fees", formatNumber(summary.total_fees, 8), -summary.total_fees],
+          ["Max drawdown", formatNumber(summary.max_drawdown, 8), -summary.max_drawdown],
+        ];
+        document.getElementById("metrics").innerHTML = metrics
+          .map(([label, value, signedValue]) => {
+            const tone = signedValue < 0 ? "negative" : signedValue > 0 ? "positive" : "";
+            return `
+              <article class="metric">
+                <div class="label">${label}</div>
+                <div class="value ${tone}">${value}</div>
+              </article>
+            `;
+          })
+          .join("");
+      }
+
+      function renderRows(rows) {
+        document.getElementById("rows").innerHTML = rows
+          .map((row) => {
+            const equityTone = row.equity < 0 ? "negative" : row.equity > 0 ? "positive" : "";
+            return `
+              <tr>
+                <td>${row.step}</td>
+                <td>${formatNumber(row.bid, 4)}</td>
+                <td>${formatNumber(row.ask, 4)}</td>
+                <td>${row.fills}</td>
+                <td>${formatNumber(row.inventory, 6)}</td>
+                <td>${formatNumber(row.fees_paid, 8)}</td>
+                <td class="${equityTone}">${formatNumber(row.equity, 8)}</td>
+              </tr>
+            `;
+          })
+          .join("");
+      }
+
+      function renderChart(id, rows, field, lineClass, pointColor) {
+        const svg = document.getElementById(id);
+        const width = 640;
+        const height = 220;
+        const padding = 28;
+        const values = rows.map((row) => Number(row[field]));
+        const min = Math.min(...values);
+        const max = Math.max(...values);
+        const range = max - min || 1;
+        const xStep = rows.length > 1 ? (width - padding * 2) / (rows.length - 1) : 0;
+
+        const points = values.map((value, index) => {
+          const x = padding + xStep * index;
+          const y = height - padding - ((value - min) / range) * (height - padding * 2);
+          return { x, y, value };
+        });
+        const polyline = points.map((point) => `${point.x},${point.y}`).join(" ");
+        const zeroY = min <= 0 && max >= 0
+          ? height - padding - ((0 - min) / range) * (height - padding * 2)
+          : height - padding;
+
+        svg.innerHTML = `
+          <line class="axis" x1="${padding}" y1="${height - padding}" x2="${width - padding}" y2="${height - padding}"></line>
+          <line class="axis" x1="${padding}" y1="${padding}" x2="${padding}" y2="${height - padding}"></line>
+          <line class="axis" x1="${padding}" y1="${zeroY}" x2="${width - padding}" y2="${zeroY}"></line>
+          <polyline class="${lineClass}" points="${polyline}"></polyline>
+          ${points
+            .map(
+              (point) => `
+                <circle class="point" cx="${point.x}" cy="${point.y}" r="4" style="stroke: ${pointColor}">
+                  <title>${field}: ${formatNumber(point.value, 8)}</title>
+                </circle>
+              `
+            )
+            .join("")}
+        `;
+      }
+
+      loadReport();
+    </script>
+  </body>
+</html>

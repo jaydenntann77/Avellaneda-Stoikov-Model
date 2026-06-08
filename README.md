@@ -97,3 +97,16 @@ python examples/capture_live_binance_depth.py
 
 This overwrites `data/raw/btcusdt_futures_depth_live.jsonl` with 10 top-of-book
 depth snapshots captured one second apart.
+
+Preview the current static report locally with:
+
+```bash
+cd reports
+python -m http.server 8765
+```
+
+Then open:
+
+```text
+http://127.0.0.1:8765
+```
