@@ -1,6 +1,7 @@
 import pytest
 
-from avellaneda_stoikov.portfolio import PortfolioState, apply_fill, mark_to_market
+from avellaneda_stoikov.execution import Fill
+from avellaneda_stoikov.portfolio import PortfolioState, apply_fill, apply_fill_event, mark_to_market
 
 
 def test_buy_fill_reduces_cash_and_increases_inventory() -> None:
@@ -47,6 +48,15 @@ def test_mark_to_market_values_inventory_at_mid_price() -> None:
     equity = mark_to_market(state, mid_price=101.0)
 
     assert equity == pytest.approx(2.0)
+
+
+def test_apply_fill_event_updates_portfolio_from_fill_object() -> None:
+    fill = Fill(side="buy", price=100.0, quantity=2.0)
+
+    next_state = apply_fill_event(PortfolioState(), fill=fill)
+
+    assert next_state.cash == pytest.approx(-200.0)
+    assert next_state.inventory == pytest.approx(2.0)
 
 
 def test_invalid_fill_inputs_raise_clear_errors() -> None:

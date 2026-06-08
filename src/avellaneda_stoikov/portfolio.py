@@ -7,10 +7,8 @@ does not decide whether a quote gets filled; execution logic will come later.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Literal
 
-
-FillSide = Literal["buy", "sell"]
+from avellaneda_stoikov.execution import Fill, FillSide
 
 
 @dataclass(frozen=True)
@@ -52,6 +50,22 @@ def apply_fill(
     return PortfolioState(
         cash=state.cash + notional - fee,
         inventory=state.inventory - quantity,
+    )
+
+
+def apply_fill_event(
+    state: PortfolioState,
+    fill: Fill,
+    fee_rate: float = 0.0,
+) -> PortfolioState:
+    """Return the portfolio state after applying a Fill object."""
+
+    return apply_fill(
+        state=state,
+        side=fill.side,
+        price=fill.price,
+        quantity=fill.quantity,
+        fee_rate=fee_rate,
     )
 
 
