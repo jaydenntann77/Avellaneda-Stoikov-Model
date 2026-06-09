@@ -4,11 +4,10 @@ This project is my attempt to understand market making from first principles,
 starting with the Avellaneda-Stoikov model and then forcing it to interact with
 real Binance BTCUSDT Futures L2 order book data.
 
-I did not build this as a production trading bot. I built it because I wanted to
-understand what actually happens when a clean theoretical market making model is
+I built it because I wanted to understand what actually happens when a clean theoretical market making model is
 put next to noisy order book data, fees, fills, inventory, and calibration.
 
-Live report:
+Live backtest:
 
 https://jaydenntann77.github.io/Avellaneda-Stoikov-Model/
 
@@ -55,20 +54,15 @@ more attractive and my bid less attractive, nudging the strategy to sell
 inventory.
 
 If I am short, the reservation price moves higher. That makes my bid more
-attractive and my ask less attractive, nudging the strategy to buy inventory
+attractive and my ask less attractive, and the strategy buys more inventory
 back.
-
-That single shift is the main idea I wanted the dashboard to show. If the
-reservation price is not visibly moving, then the project is just another random
-spread quoting toy.
 
 ## The Core Model
 
 The approximate A-S spread I used is:
 
 ```text
-spread = gamma * sigma^2 * horizon
-       + (2 / gamma) * log(1 + gamma / k)
+spread = gamma * sigma^2 * horizon + (2 / gamma) * log(1 + gamma / k)
 ```
 
 Then:
@@ -85,36 +79,31 @@ The parameters matter a lot:
 - `k` controls how quickly fills decay as quotes move away from the mid.
 - `horizon` controls the remaining risk window.
 
-One thing I learned pretty quickly is that the equations are the clean part.
-The harder part is deciding what these parameters should be when the market is
+Theoretically the equations are clean and the parameters seem easy to optimise.
+But i realised that the harder part is deciding what these parameters should be when the market is
 moving, liquidity is uneven, and the sample is not stationary.
 
 ## What I Built
 
 The project currently does four main things.
 
-First, it fetches and stores Binance USD-M Futures L2 depth snapshots for
-BTCUSDT.
+1. It fetches and stores Binance USD-M Futures L2 depth snapshots for
+   BTCUSDT.
+2. It reconstructs those snapshots into a normalized order book format.
+3. it runs an inventory-aware A-S quote ladder through the data. The ladder
+   is still centered on the A-S reservation price, but it places multiple passive
+   levels on each side so the replay has enough quote opportunities to inspect.
+4. It produces a static HTML backtest that replays the strategy frame by
+   frame. The backtest shows:
+    - order book depth
+    - bid and ask quote paths
+    - reservation price
+    - fill markers
+    - cash, inventory, equity, and PnL
+    - calibrated parameters
+    - final backtest summary
 
-Second, it reconstructs those snapshots into a normalized order book format.
-
-Third, it runs an inventory-aware A-S quote ladder through the data. The ladder
-is still centered on the A-S reservation price, but it places multiple passive
-levels on each side so the replay has enough quote opportunities to inspect.
-
-Fourth, it produces a static HTML report that replays the strategy frame by
-frame. The report shows:
-
-- order book depth
-- bid and ask quote paths
-- reservation price
-- fill markers
-- cash, inventory, equity, and PnL
-- calibrated parameters
-- final backtest summary
-
-The point of the report is not just to show a final PnL number. The point is to
-let someone watch how inventory changes the quotes.
+The backtest lets someone watch how inventory changes the quotes in real time.
 
 ## Calibration
 
@@ -135,18 +124,15 @@ net_pnl
 - inventory_penalty * max_absolute_inventory
 ```
 
-This is not the same as saying gamma is directly observable from the order book.
-It is not. Gamma is more like a risk preference. In this project, I treat it as
-a parameter selected empirically for the sample and objective.
+This is not the same as saying gamma is directly observable from the order book. Gamma is more like a risk preference. In this project, I treat it as a parameter selected empirically for the sample and objective.
 
 The report also shows a rolling sigma range. That was useful because it reminded
 me that volatility is not really stationary, even inside a short captured
-window. The theoretical model is elegant, but the market keeps changing its
-personality.
+window. The theoretical model is elegant in itself, but the market will keep changing.
 
-## What The Current Report Shows
+## What The Current backtest Shows
 
-The current published report uses 240 real Binance L2 frames.
+The current published backtest uses 240 real Binance L2 frames.
 
 At a high level, it shows:
 
@@ -159,36 +145,6 @@ At a high level, it shows:
 
 The most important part to look at is the gap between the mid-price and the
 reservation price. That gap is the model reacting to inventory.
-
-## What I Learned
-
-The main thing I learned is that market making is less about "predicting price"
-and more about surviving inventory.
-
-A few specific lessons:
-
-1. **Inventory is not a side detail.**
-   It directly changes the quote center. This is the core A-S insight.
-
-2. **Fill modeling matters a lot.**
-   If I assume every quote fills whenever it touches the book, the backtest
-   looks active but unrealistic. If I make fills too strict, nothing happens.
-   The current next-snapshot crossing approximation is still simple, but it is
-   at least tied to actual order book movement.
-
-3. **Calibration is fragile.**
-   A parameter set that looks reasonable on one sample can be too wide, too
-   passive, or too aggressive on another. This is exactly why I added empirical
-   sigma and k calibration.
-
-4. **A nice PnL number can be misleading.**
-   Without looking at inventory, drawdown, fees, and fills, a final equity number
-   does not say much.
-
-5. **The theory is clean. The implementation is messy.**
-   The formula fits on a few lines. The hard parts are data quality, execution
-   assumptions, queue position, fees, latency, and deciding what is honest to
-   show.
 
 ## Limitations
 
@@ -204,37 +160,3 @@ Things it does not model yet:
 - longer intraday sessions
 - rolling recalibration during the replay
 - real exchange order management
-
-So I would not describe this as a trading system. I would describe it as a
-market microstructure research project and a visual explanation of the
-Avellaneda-Stoikov inventory mechanism.
-
-## What I Would Improve Next
-
-The next improvements I would make are:
-
-- compare A-S against a naive symmetric quote ladder
-- run longer intraday samples
-- recalibrate sigma and k on a rolling basis
-- add queue-position assumptions
-- model latency and cancellations
-- separate maker rebates / taker fees by venue
-- add a volatility-regime view
-
-The comparison against a naive strategy is probably the most important next
-step. It would make the value of the reservation price adjustment much more
-obvious.
-
-## How I Would Explain This In An Interview
-
-The short version:
-
-> I implemented the Avellaneda-Stoikov market making model and replayed it on
-> real Binance BTCUSDT L2 order book data. The main thing I wanted to study was
-> how inventory changes the market maker's reservation price, and therefore its
-> bid/ask quotes. I also calibrated volatility and fill-intensity from the data,
-> then selected risk aversion through a grid search objective. The project taught
-> me that the theoretical model is elegant, but the practical difficulty is
-> execution modeling, calibration stability, and inventory risk.
-
-That is the actual thing I learned from building this.
