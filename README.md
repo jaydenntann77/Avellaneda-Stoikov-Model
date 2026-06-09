@@ -146,11 +146,17 @@ At a high level, it shows:
 The most important part to look at is the gap between the mid-price and the
 reservation price. That gap is the model reacting to inventory.
 
+## The Data Window
+
+The live backtest currently replays a short Binance BTCUSDT futures L2 snapshot window rather than a multi-day production backtest. I kept this intentionally small so the static report can be lightweight and interactive.
+
+The result should be read as a microstructure replay: it shows how the AS quoting logic reacts to real order book movement, how inventory changes the reservation price, and how fills affect PnL.
+
+It is not yet evidence that the strategy is profitable over time. To test that properly, the next step would be running the same engine over longer historical windows across different volatility regimes and market sessions. And also different fee tiers.
+
 ## Limitations
 
-This is still a research backtest.
-
-Things it does not model yet:
+Things the research does not model yet:
 
 - queue position
 - latency
