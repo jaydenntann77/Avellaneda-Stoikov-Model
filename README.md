@@ -11,24 +11,18 @@ Live backtest:
 
 https://jaydenntann77.github.io/Avellaneda-Stoikov-Model/
 
-## The Question I Was Trying To Answer
+## The Problem
 
 A simple market maker posts a bid and an ask around the mid-price, hoping to buy
 low, sell high, and earn the spread.
 
-That sounds easy until inventory starts building up.
+This is easy until inventory starts building up.
 
 If my bids keep getting hit, I become long. If price drops after that, the
 strategy loses money. If my asks keep getting hit, I become short. If price
 rises, same problem in the other direction.
 
-So the more interesting question is not just:
-
-```text
-Where should I quote around the mid-price?
-```
-
-It is:
+So the question is:
 
 ```text
 How should my quotes change when my inventory changes?
