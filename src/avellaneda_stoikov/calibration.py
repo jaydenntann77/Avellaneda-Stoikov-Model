@@ -6,6 +6,8 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from math import exp, log, sqrt
 
+from avellaneda_stoikov.order_book import OrderBookSnapshot
+
 
 @dataclass(frozen=True)
 class ArrivalIntensityFit:
@@ -13,6 +15,15 @@ class ArrivalIntensityFit:
 
     base_intensity: float
     k: float
+
+
+@dataclass(frozen=True)
+class EmpiricalArrivalIntensity:
+    """Observed fill intensities by quote distance plus exponential fit."""
+
+    quote_distances: tuple[float, ...]
+    fill_intensities: tuple[float, ...]
+    fit: ArrivalIntensityFit
 
 
 def estimate_price_volatility(mid_prices: Sequence[float], time_step_seconds: float) -> float:
@@ -41,6 +52,86 @@ def estimate_price_volatility(mid_prices: Sequence[float], time_step_seconds: fl
     # differences, not percentage/log returns, to match the paper's formula.
     realized_variance = sum(change**2 for change in price_changes) / len(price_changes)
     return sqrt(realized_variance / time_step_seconds)
+
+
+def estimate_rolling_price_volatility(
+    mid_prices: Sequence[float],
+    time_step_seconds: float,
+    window_size: int,
+) -> tuple[float, ...]:
+    """Estimate volatility over rolling windows of mid-price observations."""
+
+    _validate_mid_prices(mid_prices)
+    if time_step_seconds <= 0:
+        raise ValueError("time_step_seconds must be positive.")
+    if window_size < 2:
+        raise ValueError("window_size must be at least 2.")
+    if window_size > len(mid_prices):
+        raise ValueError("window_size cannot exceed the number of mid-prices.")
+
+    return tuple(
+        estimate_price_volatility(
+            mid_prices[index : index + window_size],
+            time_step_seconds=time_step_seconds,
+        )
+        for index in range(len(mid_prices) - window_size + 1)
+    )
+
+
+def estimate_arrival_intensity_from_snapshots(
+    snapshots: Sequence[OrderBookSnapshot],
+    quote_distances: Sequence[float],
+    time_step_seconds: float,
+) -> EmpiricalArrivalIntensity:
+    """Estimate lambda(delta) from next-snapshot order book crossings.
+
+    For each distance, this places a hypothetical bid and ask around the current
+    mid-price. A bid opportunity is counted as filled when the next best ask
+    moves down to that bid. An ask opportunity is counted as filled when the
+    next best bid moves up to that ask.
+    """
+
+    if len(snapshots) < 2:
+        raise ValueError("at least two snapshots are required.")
+    if time_step_seconds <= 0:
+        raise ValueError("time_step_seconds must be positive.")
+    if len(quote_distances) < 2:
+        raise ValueError("at least two quote distances are required.")
+    if any(distance < 0 for distance in quote_distances):
+        raise ValueError("quote_distances cannot be negative.")
+
+    intensities = []
+    for distance in quote_distances:
+        fills = 0
+        opportunities = 0
+        for snapshot, next_snapshot in zip(snapshots, snapshots[1:]):
+            bid = snapshot.mid_price - distance
+            ask = snapshot.mid_price + distance
+            if next_snapshot.best_ask <= bid:
+                fills += 1
+            if next_snapshot.best_bid >= ask:
+                fills += 1
+            opportunities += 2
+
+        intensities.append(fills / (opportunities * time_step_seconds))
+
+    positive_pairs = [
+        (distance, intensity)
+        for distance, intensity in zip(quote_distances, intensities)
+        if intensity > 0
+    ]
+    if len(positive_pairs) < 2:
+        raise ValueError("at least two positive fill intensities are required.")
+
+    fit = fit_arrival_intensity_decay(
+        quote_distances=[distance for distance, _ in positive_pairs],
+        fill_intensities=[intensity for _, intensity in positive_pairs],
+    )
+    return EmpiricalArrivalIntensity(
+        quote_distances=tuple(quote_distances),
+        fill_intensities=tuple(intensities),
+        fit=fit,
+    )
 
 
 def fit_arrival_intensity_decay(

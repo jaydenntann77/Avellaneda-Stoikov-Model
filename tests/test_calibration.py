@@ -2,7 +2,13 @@ import pytest
 
 from math import exp
 
-from avellaneda_stoikov.calibration import estimate_price_volatility, fit_arrival_intensity_decay
+from avellaneda_stoikov.calibration import (
+    estimate_arrival_intensity_from_snapshots,
+    estimate_price_volatility,
+    estimate_rolling_price_volatility,
+    fit_arrival_intensity_decay,
+)
+from avellaneda_stoikov.order_book import OrderBookSnapshot
 
 
 def test_zero_price_changes_have_zero_volatility() -> None:
@@ -24,6 +30,16 @@ def test_longer_time_step_reduces_per_sqrt_second_volatility() -> None:
     assert four_second_sigma == pytest.approx(one_second_sigma / 2.0)
 
 
+def test_rolling_volatility_returns_windowed_estimates() -> None:
+    sigmas = estimate_rolling_price_volatility(
+        [100.0, 101.0, 100.0, 102.0],
+        time_step_seconds=1.0,
+        window_size=3,
+    )
+
+    assert sigmas == pytest.approx((1.0, (2.5) ** 0.5))
+
+
 def test_invalid_volatility_inputs_raise_clear_errors() -> None:
     with pytest.raises(ValueError, match="at least two mid-prices"):
         estimate_price_volatility([100.0], time_step_seconds=1.0)
@@ -34,6 +50,12 @@ def test_invalid_volatility_inputs_raise_clear_errors() -> None:
     with pytest.raises(ValueError, match="time_step_seconds must be positive"):
         estimate_price_volatility([100.0, 101.0], time_step_seconds=0.0)
 
+    with pytest.raises(ValueError, match="window_size must be at least 2"):
+        estimate_rolling_price_volatility([100.0, 101.0], 1.0, window_size=1)
+
+    with pytest.raises(ValueError, match="window_size cannot exceed"):
+        estimate_rolling_price_volatility([100.0, 101.0], 1.0, window_size=3)
+
 
 def test_arrival_decay_fit_recovers_known_exponential_parameters() -> None:
     quote_distances = [0.0, 1.0, 2.0, 3.0]
@@ -43,6 +65,24 @@ def test_arrival_decay_fit_recovers_known_exponential_parameters() -> None:
 
     assert fit.base_intensity == pytest.approx(10.0)
     assert fit.k == pytest.approx(1.5)
+
+
+def test_empirical_arrival_intensity_from_snapshots_fits_crossing_rates() -> None:
+    snapshots = (
+        OrderBookSnapshot.from_levels(bids=[(99.9, 1.0)], asks=[(100.1, 1.0)]),
+        OrderBookSnapshot.from_levels(bids=[(101.0, 1.0)], asks=[(101.2, 1.0)]),
+        OrderBookSnapshot.from_levels(bids=[(100.0, 1.0)], asks=[(100.2, 1.0)]),
+        OrderBookSnapshot.from_levels(bids=[(100.2, 1.0)], asks=[(100.4, 1.0)]),
+    )
+
+    calibration = estimate_arrival_intensity_from_snapshots(
+        snapshots=snapshots,
+        quote_distances=[0.0, 0.5, 1.0],
+        time_step_seconds=1.0,
+    )
+
+    assert calibration.fill_intensities == pytest.approx((0.5, 1 / 3, 1 / 6))
+    assert calibration.fit.k > 0
 
 
 def test_arrival_decay_fit_rejects_non_decaying_intensities() -> None:
@@ -65,3 +105,10 @@ def test_invalid_arrival_decay_inputs_raise_clear_errors() -> None:
 
     with pytest.raises(ValueError, match="must be positive"):
         fit_arrival_intensity_decay([0.0, 1.0], [10.0, 0.0])
+
+    snapshots = (
+        OrderBookSnapshot.from_levels(bids=[(99.0, 1.0)], asks=[(101.0, 1.0)]),
+        OrderBookSnapshot.from_levels(bids=[(99.0, 1.0)], asks=[(101.0, 1.0)]),
+    )
+    with pytest.raises(ValueError, match="at least two quote distances"):
+        estimate_arrival_intensity_from_snapshots(snapshots, [1.0], 1.0)
