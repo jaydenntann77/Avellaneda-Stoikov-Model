@@ -109,7 +109,7 @@ The backtest lets someone watch how inventory changes the quotes in real time.
 
 I did not want the final version to just use random constants.
 
-For the current report:
+For the current backtest:
 
 - `sigma` is estimated from realized BTCUSDT mid-price changes.
 - `k` is fitted from empirical next-snapshot crossing intensity at different
@@ -126,7 +126,7 @@ net_pnl
 
 This is not the same as saying gamma is directly observable from the order book. Gamma is more like a risk preference. In this project, I treat it as a parameter selected empirically for the sample and objective.
 
-The report also shows a rolling sigma range. That was useful because it reminded
+The backtest also shows a rolling sigma range. That was useful because it reminded
 me that volatility is not really stationary, even inside a short captured
 window. The theoretical model is elegant in itself, but the market will keep changing.
 
@@ -148,7 +148,7 @@ reservation price. That gap is the model reacting to inventory.
 
 ## The Data Window
 
-The live backtest currently replays a short Binance BTCUSDT futures L2 snapshot window rather than a multi-day production backtest. I kept this intentionally small so the static report can be lightweight and interactive.
+The live backtest currently replays a short Binance BTCUSDT futures L2 snapshot window rather than a multi-day production backtest. I kept this intentionally small so the static site can be lightweight and interactive.
 
 The result should be read as a microstructure replay: it shows how the AS quoting logic reacts to real order book movement, how inventory changes the reservation price, and how fills affect PnL.
 
