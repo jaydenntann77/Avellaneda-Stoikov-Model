@@ -5,6 +5,12 @@
     "venue": "Binance USD-M Futures",
     "data_path": "data/raw/btcusdt_futures_depth_live.jsonl",
     "steps": 240,
+    "data_window": {
+      "start_time_ms": 1780936203085,
+      "end_time_ms": 1780936302284,
+      "start_time_utc": "2026-06-08 16:30:03 UTC",
+      "end_time_utc": "2026-06-08 16:31:42 UTC"
+    },
     "model_parameters": {
       "gamma": 0.0001,
       "sigma": 5.764833513582735,

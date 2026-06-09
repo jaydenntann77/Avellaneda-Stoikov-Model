@@ -1,5 +1,7 @@
 """Run the basic Avellaneda-Stoikov backtest on saved Binance depth data."""
 
+from datetime import datetime, timezone
+
 from avellaneda_stoikov.backtest import run_backtest
 from avellaneda_stoikov.binance import (
     load_binance_depth_messages_jsonl,
@@ -37,6 +39,8 @@ ROLLING_VOL_WINDOW = 60
 def main() -> None:
     messages = load_binance_depth_messages_jsonl(DATA_PATH)
     snapshots = reconstruct_snapshots_from_binance_messages(messages)
+    start_time_ms = _message_time_ms(messages[0])
+    end_time_ms = _message_time_ms(messages[-1])
     mid_prices = [snapshot.mid_price for snapshot in snapshots]
     sigma = estimate_price_volatility(
         mid_prices=mid_prices,
@@ -87,6 +91,12 @@ def main() -> None:
             "venue": "Binance USD-M Futures",
             "data_path": DATA_PATH,
             "steps": len(results),
+            "data_window": {
+                "start_time_ms": start_time_ms,
+                "end_time_ms": end_time_ms,
+                "start_time_utc": _format_utc_timestamp(start_time_ms),
+                "end_time_utc": _format_utc_timestamp(end_time_ms),
+            },
             "model_parameters": {
                 "gamma": params.gamma,
                 "sigma": params.sigma,
@@ -189,6 +199,19 @@ def _select_gamma(snapshots, sigma: float, k: float) -> tuple[float, tuple[dict[
 
     best_trial = max(trials, key=lambda trial: trial["objective"])
     return float(best_trial["gamma"]), tuple(trials)
+
+
+def _message_time_ms(message: dict) -> int | None:
+    timestamp = message.get("E") or message.get("T")
+    return int(timestamp) if timestamp is not None else None
+
+
+def _format_utc_timestamp(timestamp_ms: int | None) -> str | None:
+    if timestamp_ms is None:
+        return None
+    return datetime.fromtimestamp(timestamp_ms / 1000, tz=timezone.utc).strftime(
+        "%Y-%m-%d %H:%M:%S UTC"
+    )
 
 
 if __name__ == "__main__":

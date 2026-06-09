@@ -57,6 +57,28 @@
         margin-bottom: 34px;
       }
 
+      .data-window {
+        flex: 0 0 auto;
+        max-width: 340px;
+        border: 1px solid rgba(234, 217, 189, 0.84);
+        border-radius: 14px;
+        background: rgba(255, 252, 246, 0.76);
+        box-shadow: 0 14px 34px rgba(117, 84, 42, 0.06);
+        padding: 12px 14px;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.35;
+        text-align: right;
+      }
+
+      .data-window strong {
+        display: block;
+        margin-bottom: 4px;
+        color: var(--gold-dark);
+        font-size: 12px;
+        text-transform: uppercase;
+      }
+
       h1 {
         margin: 0 0 14px;
         font-family: Georgia, "Times New Roman", serif;
@@ -550,20 +572,132 @@
         .replay-stats {
           grid-template-columns: 1fr;
         }
+
+        .replay-grid {
+          gap: 16px;
+        }
       }
 
       @media (max-width: 700px) {
         main {
-          width: min(100% - 28px, 1480px);
-          padding: 28px 0;
+          width: min(100% - 24px, 1480px);
+          padding: 24px 0;
         }
 
         header {
           display: grid;
+          gap: 14px;
+          margin-bottom: 24px;
+        }
+
+        h1 {
+          font-size: clamp(34px, 11vw, 46px);
+        }
+
+        p {
+          font-size: 14px;
+        }
+
+        .data-window {
+          max-width: none;
+          text-align: left;
         }
 
         .metrics {
           grid-template-columns: 1fr;
+          gap: 12px;
+        }
+
+        .metric {
+          min-height: 96px;
+          padding: 16px;
+        }
+
+        .value {
+          font-size: 22px;
+        }
+
+        .charts {
+          gap: 14px;
+        }
+
+        .chart {
+          min-height: 280px;
+          padding: 18px 16px;
+        }
+
+        .chart-title {
+          font-size: 18px;
+        }
+
+        svg {
+          height: 220px;
+        }
+
+        .replay {
+          padding: 18px 14px;
+        }
+
+        .replay-header {
+          display: grid;
+          gap: 8px;
+        }
+
+        .replay-title {
+          font-size: clamp(28px, 9vw, 36px);
+        }
+
+        .replay-subtitle {
+          line-height: 1.45;
+        }
+
+        .replay-stats {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+
+        .replay-controls {
+          grid-template-columns: auto minmax(0, 1fr);
+        }
+
+        .replay-controls .frame-label {
+          grid-column: 1 / -1;
+        }
+
+        .replay-panel {
+          min-height: 0;
+          padding: 16px 12px;
+          overflow-x: auto;
+        }
+
+        .legend {
+          gap: 8px;
+          font-size: 11px;
+        }
+
+        .replay-chart {
+          min-width: 620px;
+          height: 300px;
+        }
+
+        .book-ladder {
+          min-width: 620px;
+          max-width: none;
+          margin-top: 16px;
+        }
+
+        .book-header,
+        .book-row {
+          grid-template-columns: 62px minmax(80px, 1fr) 78px 78px minmax(80px, 1fr) 62px;
+          gap: 8px;
+        }
+
+        .book-row {
+          font-size: 12px;
+        }
+
+        .book-bar {
+          height: 18px;
         }
 
         .table-wrap {
@@ -574,6 +708,11 @@
           position: static;
           width: 100%;
           margin-bottom: 12px;
+        }
+
+        .note {
+          font-size: 13px;
+          padding: 14px;
         }
       }
     </style>
@@ -589,6 +728,7 @@
               simple inventory-aware market making backtest.
             </p>
           </div>
+          <div class="data-window" id="data-window"></div>
         </header>
 
         <section class="metrics" id="metrics"></section>
@@ -668,6 +808,7 @@
       async function loadReport() {
         const response = await fetch(`./latest_backtest.json?v=${Date.now()}`);
         const report = await response.json();
+        renderDataWindow(report.metadata);
         renderNote(report.metadata);
         renderMetrics(report.summary, report.metadata);
         renderChart("equity-chart", report.rows, "equity", "equity-line", "#d47b00");
@@ -688,6 +829,17 @@
         const calibration = metadata.calibration || {};
         document.getElementById("report-note").textContent =
           `Calibration: sigma from realized mid-price variance, k from L2 crossing intensity, gamma from risk-adjusted grid search. Rolling sigma range: ${formatNumber(calibration.rolling_sigma_min ?? 0, 3)}-${formatNumber(calibration.rolling_sigma_max ?? 0, 3)}. Fill model: ${fillModel}. Quote ladder: ${quoteLevels} levels per side. Initial inventory: ${formatNumber(initialInventory, 4)} BTC. This is a research backtest, not a production trading simulator.`;
+      }
+
+      function renderDataWindow(metadata) {
+        const dataWindow = metadata.data_window || {};
+        const start = dataWindow.start_time_utc || "unknown";
+        const end = dataWindow.end_time_utc || "unknown";
+        document.getElementById("data-window").innerHTML = `
+          <strong>Data Window</strong>
+          <span>${start}</span><br />
+          <span>${end}</span>
+        `;
       }
 
       function metricCard(label, value, unit, signedValue, icon, iconTone = "") {
